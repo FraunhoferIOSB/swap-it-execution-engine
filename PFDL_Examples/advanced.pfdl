@@ -1,0 +1,131 @@
+Struct SWAP_Order
+    order_id:number
+    stand:Stand_Segment
+    segments: Light_Segment[]
+    number_light_segments: number
+End
+
+Struct Stand_Segment
+    stand_shape:string
+    stand_height:number
+    stand_id:string
+End
+
+Struct Light_Segment
+    color: string
+    diameter: number
+    segment_id:string
+End
+
+Task productionTask
+    Parallel
+        manufacture_light_segments
+            In
+                SWAP_Order
+                {
+                    "order_id":1000,
+                    "stand":{
+                        "stand_shape":"plate",
+                        "stand_height":3,
+                        "stand_id": "Default"
+                    },
+                    "segments":
+                    [
+                    {
+                        "color": "red",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    },
+                    {
+                        "color": "green",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    }
+                    ],
+                    "number_light_segments": 5
+                }
+        manufacture_stand_segment
+            In
+                SWAP_Order
+                    {
+                        "order_id":1000,
+                        "stand":{
+                            "stand_shape":"plate",
+                           "stand_height":3,
+                            "stand_id": "Default"
+                        },
+                        "segments":
+                        [
+                        {
+                            "color": "red",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        },
+                        {
+                            "color": "green",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        }
+                        ],
+                        "number_light_segments": 5
+                    }
+            Out
+                order:SWAP_Order
+    Mounting
+        In
+            order
+        Out
+            order:SWAP_Order
+End
+
+
+Task manufacture_stand_segment
+    In
+        order: SWAP_Order
+    GetPartsFromWarehouse
+        In
+            order
+        Out
+            order: SWAP_Order
+    Milling
+        In
+            order
+        Out
+            order:SWAP_Order
+    Out
+        order
+End
+
+Task manufacture_light_segments
+    In
+        order: SWAP_Order
+    Parallel Loop i To order.number_light_segments
+        manufacture_light_segment
+            In
+                order
+            Out
+                order:SWAP_Order
+    Loop i To order.number_light_segments
+        Gluing
+            In
+                order
+            Out
+                order:SWAP_Order
+End
+
+Task manufacture_light_segment
+    In
+        order: SWAP_Order
+    GetPartsFromWarehouse
+        In
+            order
+        Out
+            order: SWAP_Order
+    Coating
+        In
+            order
+        Out
+            order: SWAP_Order
+    Out
+        order
+End

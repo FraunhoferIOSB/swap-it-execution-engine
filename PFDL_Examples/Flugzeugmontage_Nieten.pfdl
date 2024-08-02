@@ -1,0 +1,37 @@
+Struct Model
+    path: string
+    robot_type: string
+End
+
+Struct Position
+    x: number
+    y: number
+    z: number
+End
+
+Struct PositionOptimizationOutput
+    position: Position[]
+    position_context: string[]
+    position_count: number
+End
+
+Task productionTask
+    mountShell
+End
+
+Task mountShell
+    RobotPositionOptimizationOutput
+        In
+            Model
+            {
+                "path": "C:/../",
+                "robot_type": "abb"
+            }
+        Out
+            po: PositionOptimizationOutput
+        
+    Loop i To po.position_count
+        ScrewShell
+            In
+                po.position_context[i]
+End

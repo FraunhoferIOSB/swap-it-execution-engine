@@ -1,0 +1,236 @@
+###
+#Offene Fragen:
+
+#4. Collect from Loop
+#    --> Explizit n-ten Eintrag befüllen
+
+###
+
+#--> Großbauteil Auftrag CAD-Modell
+# sliceAndDistribute
+#   GenerateSlices - IAIS Optimierer
+#   AssignScheduling - IAIS
+#   ScheduleMilling - FutureAM
+# Relocate
+#   Pick (necessary?)
+#   Transport - AGV/Conveyor/Hiwi <-- 1-n WZM ? Tools + RawPart/Stock
+#   Place - Merhabe-RoboterZelle/Mensch
+# Execute
+#   Mill - FutureAM
+#   Measure - FutureAMScanstation
+# WeldingPrep
+#   ScheduleWelding - DoppelRoboterLabor
+#   Transport - AGV...
+# Assembly
+#   AssemblyPart - Mensch
+#   Transport - ...
+# Weld
+#   Place - Mensch/Hallenkran
+#   Weld - DoppelRoboterLabor
+#   Measure - DoppelRoboterLabor
+#   Transport - ...
+# Rework
+#   ScheduleMilling - MobileMaschine 
+#   Mill - MobileMaschine
+#   Measure - MobileMaschine
+
+# Großbauteil
+
+# 1. Sicherstellen, dass alles aufgerufen wird
+# 2. Production Task befüllen
+
+# STRUCTS GO HERE
+
+Struct MillingJob 
+    cad_path: string
+    status_code: number
+    mat : string[]
+    mat_len: number
+    tools : string[]
+    tools_len: number
+End
+
+Struct WeldingJob
+    cae_file: string
+    status_code: number
+    weldables: Object[]
+    weldables_len: number
+    tools: string[]
+    tools_len: number
+End
+
+Struct Machine
+    loc: string
+    url: string
+End
+
+Struct MillingJobAssignment
+    machine: Machine[]
+    job: MillingJob[]
+End
+
+Struct WeldingJobAssignment
+    machine: Machine[]
+    job: WeldingJob[]
+End
+
+Struct DistributionResult
+    status_code: number
+    assignment_count: number
+    job_assignments: MillingJobAssignment[]
+End
+
+Struct FieldMethodResult
+    status_code: number
+    estimated_time: number
+    id: string
+End
+
+Struct Object
+    id: string
+    location: string
+    size: number[3]
+    kind: string 
+End
+
+Struct TransportOrder
+    part: Object[]
+    destination: string
+End
+
+Struct MeasurementReport
+    part: Object[]
+    point_cloud_url: string
+End
+
+Struct Stock
+    objs: Object[]
+    len: number
+End
+
+Task productionTask
+    sliceAndDistribute
+        Out
+            genRes: DistributionResult
+
+    milling
+        In
+            genRes
+        Out
+            parts: Object[]
+    
+    welding
+        In
+            parts
+End
+
+
+Task sliceAndDistribute 
+    GenerateSlices
+        In
+            MillingJob
+            {
+                "cad_path": "https://...",
+                "status_code": 3,
+                "mat" : ["deng"],
+                "mat_len": 1,
+                "tools" : ["dengdeng"],
+                "tools_len": 1
+            }
+        Out
+            genRes: DistributionResult
+    Out 
+        genRes
+End
+
+Task milling
+    In
+        distribution: DistributionResult
+
+    Parallel Loop i To distribution.assignment_count
+        executeMilling
+            In 
+                distribution.job_assignments[i]         
+    GetParts
+        Out
+            parts: Object[]  
+    Out
+        parts
+End
+
+Task executeMilling
+    In
+        job_assignment: MillingJobAssignment
+
+    ProduceSlice
+        In 
+            job_assignment
+
+        Out 
+            res: FieldMethodResult
+
+    Condition
+        res.status_code == "Success" # Hier kommt das OPC UA Event"
+
+    Passed
+        ReceivePart
+            Out
+                spawned: Object
+
+        MeasurePart
+            In
+                spawned
+            Out
+                rep: MeasurementReport
+
+        GetStock
+            Out
+                sr : Stock
+
+        Transport
+            In
+                sr.objs
+                job_assignment
+            Out
+                transport_res : Object
+End
+
+Task welding
+
+    In
+        weldables: Object[]
+    PlanWelding
+        In
+            weldables
+        Out
+            assignment: WeldingJobAssignment
+
+    ExecuteWelding 
+        In 
+            assignment
+        Out
+            res: FieldMethodResult
+    
+    Condition
+        res.status_code == "Success"
+
+    Passed
+        ReceivePart
+            Out
+                spawned: Object
+
+        MeasurePart
+            Out
+                rep: MeasurementReport
+
+        GetStock
+            Out
+                sr : Stock
+
+        Transport
+            In
+                sr.objs
+                assignment
+            Out
+                transport_res : Object
+End

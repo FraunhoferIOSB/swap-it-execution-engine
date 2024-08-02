@@ -1,0 +1,63 @@
+Struct ShouldValues
+    roughness_1: number
+    roughness_2: number
+End
+
+Struct MirrorDescription
+    diameter: number
+    should_values: ShouldValues[]
+    process_medium: number
+    material_id: number
+    geometric_reference: number
+End
+
+Struct VerifyParametersResult
+    result: boolean
+    machine_id: string
+End
+
+Struct VerifyAvailabilityResult
+    result: boolean
+    remaining_processing_time: number
+    machine_id: string
+End
+
+Task productionTask
+    makeMirrorTask
+End
+
+Task makeMirrorTask
+    VerifyParameters
+        In
+            ShouldValues
+            {
+                "roughness_1": 5,
+                "roughness_2": 42
+            }
+            MirrorDescription
+            {
+                "diameter": 5,
+                "should_values":
+                    {
+                        "roughness_1": 5,
+                        "roughness_2": 42
+                    },
+                "process_medium": 5,
+                "material_id": 5,
+                "geometric_reference": 5
+            }
+        Out
+            vp_result: VerifyParametersResult
+
+    VerifyAvailability
+        Out
+            va_result: VerifyAvailabilityResult
+
+    Condition
+        vp_result.result == true 
+    Passed
+        Condition 
+            va_result.result == true
+        Passed
+                MakeMirror
+End

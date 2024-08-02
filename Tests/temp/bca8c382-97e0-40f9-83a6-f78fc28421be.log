@@ -1,0 +1,2 @@
+DEBUG:asyncio:Using proactor: IocpProactor
+INFO:root:2024-07-19 12:53:25.928716: Task productionTask with UUID '3fac30d9-3678-476e-86c4-45a6507c0e12' started.

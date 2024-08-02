@@ -1,0 +1,106 @@
+Struct SWAP_Order
+    order_id:number
+    stand:Stand_Segment
+    segments: Light_Segment[]
+    number_light_segments: number
+End
+
+Struct Stand_Segment
+    stand_shape:string
+    stand_height:number
+    stand_id:string
+End
+
+Struct Light_Segment
+    color: string
+    diameter: number
+    segment_id:string
+End
+
+#structure to statically assign the service to a resource
+#this structure is only uses by the execution engine internally,
+#so it does not have to be defined
+#within OPC UA namespace for the warehouse server
+Struct ResourceAssignment
+        job_resource:string
+End
+
+Task productionTask
+        manufacture_light_segments
+            In
+                SWAP_Order
+                {
+                    "order_id":1000,
+                    "stand":{
+                        "stand_shape":"plate",
+                        "stand_height":3,
+                        "stand_id": "Default"
+                    },
+                    "segments":
+                    [
+                    {
+                        "color": "red",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    },
+                    {
+                        "color": "yellow",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    },
+                    {
+                        "color": "green",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    }
+                    ],
+                    "number_light_segments": 5
+                }
+End
+
+Task manufacture_light_segments
+    In
+        order: SWAP_Order
+    #parallel loop based on the field number_light_segments
+    #of the SWAP_Order structure
+    Parallel Loop i To order.number_light_segments
+        manufacture_light_segment
+            In
+                order
+    #counting loop based on the field number_light_segments
+    #of the SWAP_Order structure
+    Loop i To order.number_light_segments
+        Gluing
+            In
+                ResourceAssignment
+                {
+                    "job_resource":"opc.tcp://host.docker.internal:4841"
+                }
+                order
+            Out
+                order: SWAP_Order
+End
+
+
+Task manufacture_light_segment
+    In
+        order: SWAP_Order
+    GetPartsFromWarehouse
+        In
+            ResourceAssignment
+                {
+                    "job_resource":"opc.tcp://host.docker.internal:4840"
+                }
+            order
+        Out
+           order: SWAP_Order
+    Coating
+        In
+            ResourceAssignment
+                {
+                    "job_resource":"opc.tcp://host.docker.internal:4842"
+                }
+            order
+        Out
+            order: SWAP_Order
+End

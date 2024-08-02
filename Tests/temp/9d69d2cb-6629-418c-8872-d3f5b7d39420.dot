@@ -1,0 +1,138 @@
+digraph {
+	graph [bb="0,0,257,431",
+		overlap=false,
+		splines=true
+	];
+	node [fillcolor="#FFFFFF",
+		fontcolor="#000000",
+		label=N,
+		style=filled
+	];
+	edge [style=solid];
+	subgraph cluster_1824443180480 {
+		graph [bb="69,8,249,423",
+			margin=15,
+			newrank=true,
+			style=""
+		];
+		subgraph cluster_1824443180960 {
+			graph [bb="84,110,234,321",
+				style=""
+			];
+			subgraph cluster_1824443181632 {
+				graph [bb="99,125,219,306",
+					style=""
+				];
+				node_4	[group="e2392f13-99c4-42cb-aac1-c2b0a27786f5",
+					height=0.5,
+					id=node_4,
+					label="",
+					pos="186,273",
+					shape=circle,
+					tooltip="95057940-f938-42e4-969a-80d043dad0af",
+					width=0.5,
+					xlabel="Mounting started",
+					xlp="120.5,298.5"];
+				node_7	[fillcolor=black,
+					group="e2392f13-99c4-42cb-aac1-c2b0a27786f5",
+					height=0.097222,
+					id=node_7,
+					label="",
+					pos="159,215.5",
+					shape=rect,
+					tooltip="f74e74fc-29ad-4f78-a2fb-4d003a598b22",
+					width=1];
+				node_4 -> node_7	[arrowhead=normal,
+					pos="e,160.3,219.17 178.48,256.54 174.15,247.65 168.8,236.64 164.8,228.42"];
+				node_5	[group="e2392f13-99c4-42cb-aac1-c2b0a27786f5",
+					height=0.5,
+					id=node_5,
+					label="",
+					pos="132,273",
+					shape=circle,
+					tooltip="1103c1b0-d45a-44be-86fd-e0b170f64d8d",
+					width=0.5,
+					xlabel="Mounting finished",
+					xlp="63.5,262.5"];
+				node_5 -> node_7	[arrowhead=normal,
+					pos="e,157.7,219.17 139.52,256.54 143.85,247.65 149.2,236.64 153.2,228.42"];
+				node_6	[group="e2392f13-99c4-42cb-aac1-c2b0a27786f5",
+					height=0.5,
+					id=node_6,
+					label="",
+					pos="159,158",
+					shape=circle,
+					tooltip="e0d9e23b-db5d-42d0-bff2-497a3bbb4ed2",
+					width=0.5,
+					xlabel="Mounting done",
+					xlp="98.5,183.5"];
+				node_7 -> node_6	[arrowhead=normal,
+					pos="e,159,176.11 159,211.82 159,207.05 159,196.59 159,186.23"];
+			}
+		}
+		node_0	[group="f8395a76-206f-4772-b4fe-5a74cff3e0c9",
+			height=0.5,
+			id=node_0,
+			label="&bull;",
+			pos="186,390",
+			shape=circle,
+			tooltip="77695222-33b2-479a-a980-8778929248ea",
+			width=0.5,
+			xlabel=productionTask_started,
+			xlp="100.5,415.5"];
+		node_1	[fillcolor=black,
+			group="f8395a76-206f-4772-b4fe-5a74cff3e0c9",
+			height=0.097222,
+			id=node_1,
+			label="",
+			pos="186,332.5",
+			shape=rect,
+			tooltip="ce2e00a2-bd81-4e65-bb31-bee751d9e471",
+			width=1];
+		node_0 -> node_1	[arrowhead=normal,
+			pos="e,186,336.36 186,371.74 186,363.59 186,354.02 186,346.49"];
+		node_1 -> node_4	[arrowhead=normal,
+			pos="e,186,291.19 186,328.73 186,323.66 186,312.42 186,301.43"];
+		node_2	[group="f8395a76-206f-4772-b4fe-5a74cff3e0c9",
+			height=0.5,
+			id=node_2,
+			label="",
+			pos="159,41",
+			shape=circle,
+			tooltip="230fcb10-1eb8-4eec-a106-2c50a6d750ad",
+			width=0.5,
+			xlabel=productionTask_finished,
+			xlp="70.5,66.5"];
+		node_3	[fillcolor=black,
+			group="f8395a76-206f-4772-b4fe-5a74cff3e0c9",
+			height=0.097222,
+			id=node_3,
+			label="",
+			pos="159,98.5",
+			shape=rect,
+			tooltip="2720aa1a-09dc-4a94-af29-6ff138dfdf38",
+			width=1];
+		node_3 -> node_2	[arrowhead=normal,
+			pos="e,159,59.112 159,94.823 159,90.049 159,79.589 159,69.227"];
+		node_6 -> node_3	[arrowhead=normal,
+			pos="e,159,102.14 159,139.75 159,130.89 159,120.29 159,112.19"];
+	}
+}
+
+call_tree:{
+    "id": "f8395a76-206f-4772-b4fe-5a74cff3e0c9",
+    "name": "productionTask",
+    "children": [
+        {
+            "id": "a5af0f19-64f2-4ff1-84a1-c01d103ddefa",
+            "name": "mounting_task",
+            "children": [
+                {
+                    "id": "e2392f13-99c4-42cb-aac1-c2b0a27786f5",
+                    "name": "Mounting",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}

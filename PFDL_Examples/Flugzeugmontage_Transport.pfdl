@@ -1,0 +1,41 @@
+# Transportaufgabe: AGV mit Hubvorrichtung transportiert Gestell mit ortsflexiblen Roboter
+
+Struct TransportJob 
+    src_station: string
+    src_pose_of_robot_at_station: string
+    dst_station: string
+    dst_pose_of_robot_at_station: string
+End
+
+Struct TransportResult
+    dst_station: string
+    dst_pose_of_robot_at_station: string
+End
+
+# Hier wusste ich nicht mehr was hier rein soll
+Struct Fahrzeug
+    fahrzeug_id: number
+    test: number
+End
+
+Task productionTask
+    transportTask
+End
+
+Task transportTask
+    AssignMoveRobot
+        In
+            TransportJob{
+                "src_station": "station_1",
+                "src_pose_of_robot_at_station": "src_pose",
+                "dst_station": "station_2",
+                "dst_pose_of_robot_at_station": "dst_pose"
+			}
+        Out
+            f1: Fahrzeug
+    MoveRobot
+        In
+            f1
+        Out
+            tr: TransportResult
+End

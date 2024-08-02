@@ -1,0 +1,296 @@
+Struct SWAP_Order
+    order_id:number
+    stand:Stand_Segment
+    segments: Light_Segment[]
+    number_light_segments: number
+End
+
+Struct Stand_Segment
+    stand_shape:string
+    stand_height:number
+    stand_id:string
+End
+
+Struct Light_Segment
+    color: string
+    diameter: number
+    segment_id:string
+End
+
+Struct Raw_Material
+    blanks:Blank[]
+    blank_number:number
+End
+
+Struct Blank
+    blank_type:string
+    blank_id: string
+    part_id:number
+End
+
+Struct ResourceAssignment
+    job_resource: string
+End
+
+Struct Milling_Capabilities
+    test_numeric: number
+End
+
+Struct GetPartsFromWarehouse_Capabilities
+    test_numeric: number
+    test_boolean: boolean
+End
+
+Struct Coating_Capabilities
+    test_numeric: number
+    test_boolean: boolean
+    test_string: string
+End
+
+Task productionTask
+    Parallel
+        manufacture_light_segments
+            In
+                SWAP_Order
+                {
+                    "order_id":1000,
+                    "stand":{
+                        "stand_shape":"plate",
+                        "stand_height":3,
+                        "stand_id": "Default"
+                    },
+                    "segments":
+                    [
+                    {
+                        "color": "red",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    },
+                    {
+                        "color": "green",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    }
+                    ],
+                    "number_light_segments": 3
+                }
+                SWAP_Order
+                    {
+                        "order_id":1000,
+                        "stand":{
+                            "stand_shape":"plate",
+                           "stand_height":3,
+                            "stand_id": "Default"
+                        },
+                        "segments":
+                        [
+                        {
+                            "color": "red",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        },
+                        {
+                            "color": "green",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        }
+                        ],
+                        "number_light_segments": 3
+                    }
+                Coating_Capabilities
+                    {
+                        "test_numeric": 260,
+                        "test_boolean": false,
+                        "test_string": "test_string"
+                    }
+        manufacture_stand_segment
+            In
+                SWAP_Order
+                    {
+                        "order_id":1000,
+                        "stand":{
+                            "stand_shape":"plate",
+                           "stand_height":3,
+                            "stand_id": "Default"
+                        },
+                        "segments":
+                        [
+                        {
+                            "color": "red",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        },
+                        {
+                            "color": "green",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        }
+                        ],
+                        "number_light_segments": 5
+                    }
+                SWAP_Order
+                    {
+                        "order_id":1000,
+                        "stand":{
+                            "stand_shape":"plate",
+                           "stand_height":3,
+                            "stand_id": "Default"
+                        },
+                        "segments":
+                        [
+                        {
+                            "color": "red",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        },
+                        {
+                            "color": "green",
+                            "diameter": 5,
+                            "segment_id": "Default"
+                        }
+                        ],
+                        "number_light_segments": 5
+                    }
+                GetPartsFromWarehouse_Capabilities{
+                    "test_numeric": 15,
+                    "test_boolean": true
+                }
+            Out
+                order:SWAP_Order
+    Mounting
+        In
+            order
+        Out
+            order:SWAP_Order
+            blanks:Raw_Material
+End
+
+
+Task manufacture_stand_segment
+    In
+        order: SWAP_Order
+        order_1: SWAP_Order
+        parts_capa: GetPartsFromWarehouse_Capabilities
+    GetPartsFromWarehouse
+        In
+            parts_capa
+            order
+            order_1
+            Light_Segment{
+                        "color": "green",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    }
+            Raw_Material{
+                "blanks":[
+                    {
+                        "blank_type":"test1",
+                        "blank_id": "test1",
+                        "part_id":1
+                    },
+                    {
+                        "blank_type":"test2",
+                        "blank_id": "test2",
+                        "part_id":2
+                    },
+                    {
+                        "blank_type":"test3",
+                        "blank_id": "test3",
+                        "part_id":3
+                    }
+                ],
+                "blank_number":3
+            }
+        Out
+            order: SWAP_Order
+            blanks:Raw_Material
+    Milling
+        In
+            order
+            Milling_Capabilities{
+                "test_numeric":20
+            }
+        Out
+            order:SWAP_Order
+            blanks:Raw_Material
+    Out
+        order
+End
+
+Task manufacture_light_segments
+    In
+        order: SWAP_Order
+        order_1: SWAP_Order
+        cc: Coating_Capabilities
+    Parallel Loop i To order.number_light_segments
+        manufacture_light_segment
+            In
+                order
+                order_1
+                cc
+                Light_Segment{
+                        "color": "green",
+                        "diameter": 5,
+                        "segment_id": "Default"
+                    }
+            Out
+                order:SWAP_Order
+                test:SWAP_Order
+    Loop i To order.number_light_segments
+        Gluing
+            In
+                order
+            Out
+                order:SWAP_Order
+                blanks:Raw_Material
+End
+
+Task manufacture_light_segment
+    In
+        order: SWAP_Order
+        order_1: SWAP_Order
+        cc: Coating_Capabilities
+        segments: Light_Segment
+
+    GetPartsFromWarehouse
+        In
+            Raw_Material{
+                "blanks":[
+                    {
+                        "blank_type":"test1",
+                        "blank_id": "test1",
+                        "part_id":1
+                    },
+                    {
+                        "blank_type":"test2",
+                        "blank_id": "test2",
+                        "part_id":2
+                    },
+                    {
+                        "blank_type":"test3",
+                        "blank_id": "test3",
+                        "part_id":3
+                    }
+                ],
+                "blank_number":3
+            }
+            segments
+            order
+            order_1
+            GetPartsFromWarehouse_Capabilities{
+                    "test_numeric": 70,
+                    "test_boolean": true
+            }
+        Out
+            order: SWAP_Order
+            blanks:Raw_Material
+    Coating
+        In
+            cc
+            order
+        Out
+            order: SWAP_Order
+    Out
+        order
+        order_1
+End

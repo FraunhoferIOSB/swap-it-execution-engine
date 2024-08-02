@@ -1,0 +1,59 @@
+Struct SWAP_Order
+        order_id:number
+        stand:Stand_Segment
+        segments: Light_Segment[]
+        number_light_segments: number
+End
+
+Struct Stand_Segment
+        stand_shape:string
+        stand_height:number
+        stand_id:string
+End
+
+Struct Light_Segment
+        color: string
+        diameter: number
+        segment_id:string
+End
+
+
+Struct ResourceAssignment
+        job_resource:string
+End
+
+    #production Task the defines the overall process
+Task productionTask
+        #define a single service GetPartsFromWarehouse
+   GetPartsFromWarehouse
+            In
+                ResourceAssignment
+                {
+                    "job_resource":"opc.tcp://host.docker.internal:4840"
+                }
+                SWAP_Order
+                {
+                    "order_id":1000,
+                    "stand":{
+                          "stand_shape":"plate",
+                          "stand_height":3,
+                          "stand_id": "Default"
+                    },
+                    "segments":
+                    [
+                    {
+                          "color": "red",
+                          "diameter": 5,
+                          "segment_id": "Default"
+                    },
+                    {
+                          "color": "green",
+                          "diameter": 5,
+                          "segment_id": "Default"
+                    }
+                    ],
+                          "number_light_segments": 1
+                    }
+            Out
+                order:SWAP_Order
+End
