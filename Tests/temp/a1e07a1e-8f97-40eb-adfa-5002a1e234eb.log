@@ -1,3 +1,0 @@
-INFO:root:2024-07-19 12:48:38.690889: Task productionTask with UUID '7b693e33-c460-44bb-83a8-4ccf9fdd9941' started.
-INFO:root:2024-07-19 12:48:38.696963: Task mounting_task with UUID 'c0b1bf35-9e91-4db3-a2fe-e9188e5605be' started.
-INFO:root:2024-07-19 12:48:38.696963: Service Mounting with UUID '2eaa7c9f-ebd0-4fdb-be8f-eae7a073195f' started.

@@ -5,9 +5,12 @@
 
     Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
+.. _Custom Dispatcher Integration:
 
-.. _Service Dispatcher Interaction:
+=============================
+Custom Dispatcher Integration
+=============================
 
-===============================
-Service Dispatcher Interaction
-===============================
+API
+====
+:ref:`Generate OPC UA Types`

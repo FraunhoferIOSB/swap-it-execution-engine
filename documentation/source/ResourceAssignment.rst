@@ -6,8 +6,8 @@
     Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 
-.. _Service Dispatcher Interaction:
+.. _ Resource Assignment:
 
-===============================
-Service Dispatcher Interaction
-===============================
+====================
+Resource Assignment
+====================

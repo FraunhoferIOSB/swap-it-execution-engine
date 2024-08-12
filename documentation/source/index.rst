@@ -17,6 +17,9 @@ Execution Engine
    :maxdepth: 2
 
    ExecutionEngineLogic
+   Dispatcher
+   ControlInterface
+   CustomDispatcherIntegration
    Glossary
    Contact
    related_projects

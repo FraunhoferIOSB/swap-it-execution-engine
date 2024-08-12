@@ -1,4 +1,0 @@
-DEBUG:asyncio:Using proactor: IocpProactor
-INFO:root:2024-07-19 15:12:58.017533: Task productionTask with UUID '8345126d-c929-4023-9ab7-cfaf19a9d5e3' started.
-INFO:root:2024-07-19 15:12:58.023542: Task mounting_task with UUID '49cff119-c537-4ecc-9d2c-df4c6343bbd5' started.
-INFO:root:2024-07-19 15:12:58.024535: Service Mounting with UUID 'c661eb72-89d5-4b5a-8aae-e91ba79175a6' started.
