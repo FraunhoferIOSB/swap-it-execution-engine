@@ -13,12 +13,12 @@ Contact
 Support/Issues
 ==============
 
-- https://github.com/FraunhoferIOSB/swap-it-process-agent/issues
+- https://github.com/FraunhoferIOSB/swap-it-execution-engine/issues
 
 Pull Requests
 ==============
 
-- https://github.com/FraunhoferIOSB/swap-it-process-agent/pulls
+- https://github.com/FraunhoferIOSB/swap-it-execution-engine/pulls
 
 
 Private Contact

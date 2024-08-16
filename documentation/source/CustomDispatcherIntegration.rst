@@ -5,12 +5,16 @@
 
     Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-.. _Custom Dispatcher Integration:
+.. _Custom Dispatchers:
 
 =============================
 Custom Dispatcher Integration
 =============================
 
+Custom integration on the example of the PFDL Scheduler
+
+.. _Dispatcher API:
+
 API
 ====
-:ref:`Generate OPC UA Types`
+:ref:`Data Types`

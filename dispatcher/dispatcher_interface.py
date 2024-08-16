@@ -13,6 +13,7 @@ class Dispatcher:
     def __init__(self):
         self.dispatcher = None
         self.structs = None
+        self.temp_structs = None
         self.dispatcher_callbacks = None
         self.server = None
         self.ee_opc_ua_converter = EngineOpcUaDataConverter()
@@ -25,17 +26,24 @@ class Dispatcher:
         self.service_finished_interface = None
         self.service_started_interface = None
         self.data_provider_interface = None
+        self.register_dispatcher_callbacks = None
+        self.start_dispatcher = None
+        self.running = None
 
     def set_dispatcher(self, dispatcher):
         self.dispatcher = dispatcher
 
-    def set_callbacks(self, server_instance, server, process_pfdl, execution_engine):
-        self.dispatcher_callbacks = DispatcherCallbackFunctions(server_instance, server, process_pfdl, execution_engine, server.data_object, self.ee_opc_ua_converter, self.opc_ua_ee_converter)
+    def set_register_dispatcher_callbacks(self, func):
+        self.register_dispatcher_callbacks = func
+
+    def set_callbacks(self, server_instance, server):
+        self.dispatcher_callbacks = DispatcherCallbackFunctions(server_instance, server, server.data_object, self.ee_opc_ua_converter, self.opc_ua_ee_converter)
         self.register_dispatcher_callbacks()
         self.server = server
 
-    def set_process_parameter(self, structs):
+    def set_process_parameter(self, structs, temp_structs):
         self.structs = structs
+        self.temp_structs = temp_structs
 
     def set_interfaces(self, task_started, task_finished, service_finished, service_started, data_provider):
         self.task_started_interface = task_started
@@ -47,21 +55,18 @@ class Dispatcher:
     def set_fire_event_method(self, fire_event_method):
         self.fire_event = fire_event_method
 
-    #todo define as part of dispatcher customization
-    def register_dispatcher_callbacks(self):
-        self.dispatcher.register_callback_service_started(self.service_started_interface)
-        self.dispatcher.register_callback_service_finished(self.service_finished_interface)
-        self.dispatcher.register_callback_task_started(self.task_started_interface)
-        self.dispatcher.register_callback_task_finished(self.task_finished_interface)
-        self.dispatcher.register_variable_access_function(self.data_provider_interface)
+    def set_start_dispatcher(self, func):
+        self.start_dispatcher = func
 
-    # todo define as part of dispatcher customization
+    def set_running(self, func):
+        self.running = func
+
+    def start_dispatcher(self):
+        self.start_dispatcher()
+
     def run_dispatcher(self):
-        self.dispatcher.start()
+        return self.running(self.dispatcher)
 
-    # todo define as part of dispatcher customization
-    def running(self):
-        return self.dispatcher.running
 
     def task_finished_callback_wrapper(self, name, uuid, task_context_uuid, output_parameter):
          #todo output_parameter = list with variable names, z.b. [order]

@@ -12,9 +12,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'ExecutionEngine'
-copyright = '2024, Fraunhofer IOSB Author(Florian Düwel)'
-author = 'Fraunhofer IOSB Author(Florian Düwel)'
+project = 'SWAP-IT Execution Engine'
+copyright = '2024, Fraunhofer IOSB Author (Florian Düwel)'
+author = 'Fraunhofer IOSB Author (Florian Düwel)'
 release = '0.9.9'
 
 html_theme_options = {

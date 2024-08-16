@@ -11,3 +11,9 @@
 ====================
 Resource Assignment
 ====================
+
+
+-> static
+-> dynamic (default ee assignment + capability matching)
+-> dynamic (external assignment agent)
+-> dynamic (service specific external assignment agent)

@@ -1,0 +1,155 @@
+..
+    Licensed under the MIT License.
+    For details on the licensing terms, see the LICENSE file.
+    SPDX-License-Identifier: MIT
+
+    Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
+.. _Dispatcher Configuration:
+
+========================
+Dispatcher Configuration
+========================
+A Dispatcher needs to be configured for the Execution Engine. As default dispatcher, the :ref:`PFDL Scheduler` is deployed. Section :ref:`Custom Dispatcher Integration`
+outlines how the :ref:`PFDL Scheduler` can be replaced with a custom dispatcher. Since the dispatcher is an individual software component,
+which is loosely coupled to the Execution Engine, the Execution Engine provides a script for a dispatcher `Configuration <https://github.com/FraunhoferIOSB/swap-it-execution-engine/blob/main/dispatcher/dispatcher_configuration.py>`_.
+In the `Configuration <https://github.com/FraunhoferIOSB/swap-it-execution-engine/blob/main/dispatcher/dispatcher_configuration.py>`_, a DispatcherConfig class is defined,
+which has to be extended with custom code to integrate custom dispatcher. However the DispatcherConfig class pre-defines on the one hand, a minimum set of class variables, and on the other
+hand, a config_dispatcher() function. All of the class variables presented in Table 1 must be set with the configuration,
+since the Execution Engine accesses these variables during run-time. Besides, the `DispatcherInterface <https://github.com/FraunhoferIOSB/swap-it-execution-engine/blob/main/dispatcher/dispatcher_interface.py>`_
+class defines a bunch of setter-function (Table 2), through which either data_types, variable_values, or functions from the dispatcher are made available to the execution engine.
+
+DispatcherConfig Class
+======================
+
+The DispatcherConfig class can be extended with any kind of variables and functions, however, only the variables and functions presented below are used by the Execution Engine.
+
+.. code-block:: python
+
+    from dispatcher.dispatcher_interface import DispatcherInterface
+
+    class DispatcherConfig:
+
+        def __init__(self):
+            self.dispatcher_object = DispatcherInterface()
+            self.structs = []
+            self.config_dispatcher()
+
+        def config_dispatcher(self):
+            #create and set the instance that will be configured as dispatcher
+            self.dispatcher_object.set_dispatcher(...)
+            for key,value in ...:
+                self.structs.append(...)
+            self.dispatcher_object.set_process_parameter(self.structs)
+            self.dispatcher_object.set_fire_event_method(...)
+            self.dispatcher_object.set_interfaces(...)
+            self.dispatcher_object.set_register_dispatcher_callbacks(...)
+            self.dispatcher_object.set_start_dispatcher(...)
+            self.dispatcher_object.set_running(...)
+
+
+
+.. list-table:: **Table 1: DispatcherConfig Class Variables**
+   :widths: 50 50 50
+   :header-rows: 1
+
+   * - **Variable**
+     - **Type**
+     - **Explanation**
+   * - self.dispatcher_object
+     - `DispatcherInterface <https://github.com/FraunhoferIOSB/swap-it-execution-engine/blob/main/dispatcher/dispatcher_interface.py>`_
+     - Dispatcher Object instance for the Execution Engine.
+   * - self.structs
+     - list[:ref:`EngineStruct`]
+     - | List with custom variable types in the :ref:`EngineStruct`
+       | format. The Execution Engine generates OPC UA
+       | :ref:`Data Types` for each type provided in this type list.
+   * - self.config_dispatcher()
+     - function
+     - Configurates the dispatcher for the Execution Engine
+
+
+.. list-table:: **Table 2: DispatcherInterface Setter functions**
+   :widths: 50 50 50
+   :header-rows: 1
+
+   * - **Function**
+     - **Arguments**
+     - **Explanation**
+   * - set_dispatcher(...)
+     - dispatcher: custom object
+     - | Hands over the custom dispatcher
+       | object to the Execution Engine
+   * - set_process_parameter(...)
+     - structs: :ref:`EngineStruct`
+     - | Hands over the DispatcherConfig struct
+       | variable to the Execution Engine
+   * - set_fire_event_method(...)
+     - fire_event_method: function
+     - | Hands over a function that is executed
+       | whenever the Execution Engine
+       | completes a Service execution. This
+       | function will be registered as
+       | :ref:`Service Finished Event Callback`
+   * - set_interfaces(...)
+     - | task_started: function
+       | task_finished: function
+       | service_finished: function
+       | service_started: function
+       | data_provider: function
+     - | The callback functions the dispatcher
+       | executes. In case that the arguments
+       | of the dispatcher callbacks are equal
+       | to the arguments of the
+       | :ref:`Execution Engine Wrapper Functions`,
+       | the latter can be registered directly.
+       | Otherwise, :ref:`Dispatcher Interface Functions`
+       | are required
+   * - set_register_dispatcher_callbacks(...)
+     - func: function
+     - | Custom function that registers the
+       | :ref:`Dispatcher Callbacks` of the
+       | Execution Engine in the custom
+       | dispatcher
+   * - set_start_dispatcher(...)
+     - func: function
+     - | Registers a function inside the Execution
+       | Engine that starts the custom dispatcher
+       | program
+   * - set_running(...)
+     - func: function
+     - | Registers a function inside the Execution
+       | Engine that returns a boolean value from
+       | the dispatcher that indicates whether the
+       | dispatcher program is still running
+
+
+Execution Engine Callbacks
+=============================
+Besides registering functions, the DispatcherInterface provides the callback functions that have to be executed from the dispatcher.
+Since it is not ensured that custom dispatcher callbacks provide the exactly the input arguments that the Execution Engine requires,
+applicators can define callback_interface function, in which the arguments of the custom callbacks are mapped to the required arguments by the execution engine.
+
+.. _Execution Engine Wrapper Functions:
+
+Execution Engine Wrapper Functions
+----------------------------------
+
+.. _Dispatcher Interface Functions:
+
+Dispatcher Interface Functions
+------------------------------
+
+
+
+.. list-table:: **Table 3: callback_interface functions**
+   :widths: 50 50 50
+   :header-rows: 1
+
+   * - **Function**
+     - **Arguments**
+     - **Explanation**
+   * - set_dispatcher(...)
+     - dispatcher: custom object
+     - | Hands over the custom dispatcher
+       | object to the Execution Engine

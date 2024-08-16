@@ -17,7 +17,7 @@ Figure 1 depicts all of its functional blocks. The Control Interface only comes 
 schedules a service to be executed on the shop floor. After scheduling, the Control Interface first checks, whether a resource,
 on which the service should be executed, is provided from the Dispatcher side, or if the Control interface has to detect a resource by itself.
 For the latter, the Control Interface connects with a Device Registry to assign the service to a resource. Further information
-on the Execution Engines assignment strategies can be found in the section :ref:`Resource Assignment`.
+on the Execution Engine's assignment strategies can be found in the section :ref:`Resource Assignment`.
 
 After the assignment step is completed, an OPC UA client is determined to supervise the service execution. In general,
 the Control Interface has a set of clients to execute services. The amount of clients is set at the start of an Execution Engine. In case that
