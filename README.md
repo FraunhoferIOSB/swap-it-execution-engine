@@ -4,7 +4,11 @@
 ```
   pip install asyncua==1.1.5 nest-asyncio==1.6.0 pfdl-scheduler==0.9.0
 ```
+## Install
 
+```
+    pip install -r requirements.txt
+```
 ## Start the ExecutionEngine
 
 To start the ExecutionEngine, it is required to adjust some parameters in the start_execution_engine.py file:
