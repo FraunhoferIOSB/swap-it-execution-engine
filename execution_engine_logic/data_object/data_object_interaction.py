@@ -38,11 +38,8 @@ class DataObject:
                 return child
 
     async def remove_node(self, node):
-        #task_node = self.server.get_node(ua.NodeId(Identifier=uuid.UUID(node), NamespaceIndex=self.idx, NodeIdType=ua.NodeIdType.Guid))
         node = self.server.get_node(node)
         await self.server.delete_nodes([node])
-
-
 
     async def read_struct_values(self, task_uuid,variable_name):
         struct = self.server.get_node(

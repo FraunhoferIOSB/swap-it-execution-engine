@@ -5,31 +5,45 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 from pfdl_scheduler.model.array import Array
-from execution_engine_logic.data_types.types import EngineArray, EngineStruct
-from dispatcher.dispatcher import Dispatcher
 from pfdl_scheduler.scheduler import Scheduler, Event
 from pfdl_scheduler.api.task_api import TaskAPI
 from pfdl_scheduler.api.service_api import ServiceAPI
 from pfdl_scheduler.model.struct import Struct
 
+from execution_engine_logic.data_types.types import EngineArray, EngineStruct
+from dispatcher.dispatcher_interface import DispatcherInterface
 
-class PfdlDispatcherConfig:
+class DispatcherConfig:
 
-    def __init__(self, filepath):
-        self.dispatcher_object = None
+    def __init__(self, filepath, dashboard_host_address = None):
+        self.dispatcher_object = DispatcherInterface()
         self.scheduler = None
-        self.path_to_pfdl = filepath
-        self.dashboard_host_address = "http://localhost:8080"
+        self.filepath = filepath
+        self.dashboard_host_address = dashboard_host_address
+        self.structs = []
+        self.config_dispatcher()
 
     def config_dispatcher(self):
-
-        self.dispatcher_object = Dispatcher()
-        self.scheduler = Scheduler(self.path_to_pfdl, dashboard_host_address=self.dashboard_host_address) if self.dashboard_host_address else Scheduler(self.path_to_pfdl)
+        self.scheduler = Scheduler(self.filepath, dashboard_host_address=self.dashboard_host_address) if self.dashboard_host_address else Scheduler(self.filepath)
         self.dispatcher_object.set_dispatcher(self.scheduler)
-        self.dispatcher_object.set_process_parameter(self.scheduler.process.structs)
+        for key,value in self.scheduler.process.structs.items():
+            self.structs.append(PfdlEeDataconverter().create_ee_format(value))
+        self.dispatcher_object.set_process_parameter(self.structs)
         self.dispatcher_object.set_fire_event_method(self.fire_dispatcher_event)
         self.dispatcher_object.set_interfaces(self.task_started_interface, self.task_finished_interface, self.service_finished_interface,
                                          self.service_started_interface, self.data_provider_interface)
+        self.dispatcher_object.set_register_dispatcher_callbacks(self.register_dispatcher_callbacks)
+        self.dispatcher_object.set_start_dispatcher(self.dispatcher_object.dispatcher.start)
+        self.dispatcher_object.set_running(self.return_running)
+
+    def return_running(self, dispatcher):
+        return dispatcher.running
+    def register_dispatcher_callbacks(self):
+        self.dispatcher_object.dispatcher.register_callback_service_started(self.service_started_interface)
+        self.dispatcher_object.dispatcher.register_callback_service_finished(self.service_finished_interface)
+        self.dispatcher_object.dispatcher.register_callback_task_started(self.task_started_interface)
+        self.dispatcher_object.dispatcher.register_callback_task_finished(self.task_finished_interface)
+        self.dispatcher_object.dispatcher.register_variable_access_function(self.data_provider_interface)
 
     def fire_dispatcher_event(self, service_uuid):
         self.scheduler.fire_event(Event(event_type="service_finished",
@@ -57,8 +71,10 @@ class PfdlDispatcherConfig:
                                                            service_api.service.output_parameters)
 
     def data_provider_interface(self, variable_name, task_id):
-        variable_name, struct = self.dispatcher_object.provide_parameter_wrapper(variable_name, task_id)
+        variable_name, struct = self.dispatcher_object.provide_parameter_wrapper(variable_name, task_id.uuid)
         return EePfdlConverter().convert_ee_to_pfdl(variable_name, struct)
+
+
 
     def map_input_parameters_to_EE(self, input_parameter_values):
         input_parameters = []
@@ -123,7 +139,9 @@ class PfdlEeDataconverter:
                 item.add_attribute(key, val)
             elif isinstance(value, Array):
                 val = EngineArray(key, value.length)
-                val.set_array_type(value.values[0].name)
+                val.set_array_type(value.type_of_elements)
+                if val.data_type == '':
+                    val.set_array_type(value.values[0].name)
                 val = self.convert_array(value, val)
                 item.add_attribute(key, val)
             else:

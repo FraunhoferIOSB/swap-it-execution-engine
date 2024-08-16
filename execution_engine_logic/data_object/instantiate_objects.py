@@ -37,7 +37,6 @@ class InstantiateTypes:
         task_object = await self.types.taks_object_type(task_name)
         node_id = ua.NodeId(Identifier=uuid.UUID(task_uuid), NamespaceIndex=self.idx, NodeIdType=ua.NodeIdType.Guid)
         if task_name == "productionTask":
-            #self.production_task_uuid = task_uuid
             data_lifcycle_object = await self.server.nodes.objects.get_child([str(self.idx)+ ":" + self.life_cycle_name])
             await data_lifcycle_object.add_object(node_id, task_uuid, task_object.nodeid)
         else:

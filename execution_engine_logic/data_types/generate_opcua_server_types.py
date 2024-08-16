@@ -94,10 +94,8 @@ class GeneratePfdlTypes:
                             data_type.append(appended_data_types["Struct_Node_Id"][k])
                 field = new_struct_field(struct_overview["Variable_Name"][i][j], data_type[0], array=Is_Array)
                 struct_fields.append(field)
-            new_structure_node, _ = await new_struct(self.server, self.idx, struct_overview["Struct"][i],
-                                                     [*struct_fields])
-            appended_data_types["Name"].append(struct_overview["Struct"][i]), appended_data_types[
-                "Struct_Node_Id"].append(new_structure_node)
+            new_structure_node, _ = await new_struct(self.server, self.idx, struct_overview["Struct"][i],[*struct_fields])
+            appended_data_types["Name"].append(struct_overview["Struct"][i]), appended_data_types["Struct_Node_Id"].append(new_structure_node)
 
     async def order_struct_overview(self, struct_overview):
         ordered_struct_overview = {"Struct":[], "Variable_Name":[], "Variable_Type":[], "Array_Length":[], "Referred_Struct":[]}

@@ -9,7 +9,7 @@ from queue import Queue
 
 class ControlInterface:
 
-    def __init__(self, server, server_instance, service_execution_list, target_server_list, running, device_registry_url, assignment_agent_url):
+    def __init__(self, server, server_instance, service_execution_list, target_server_list, device_registry_url, assignment_agent_url, docker):
         self.server = server
         self.server_instance = server_instance
         self.iteration_time = self.server.iteration_time
@@ -19,7 +19,8 @@ class ControlInterface:
         self.assignment_agent_url = assignment_agent_url
         self.client_identifier = None
         self.service_res = None
-        self.running = running
+        self.running = True
+        self.docker = docker
         self.client_dict = {"Client":[], "Queue":[], "Thread":[]}
 
     def start_client_interaction(self, service_browse_name, tar_server_url, inp_args, task_uuid, service_uuid,
@@ -55,7 +56,8 @@ class ControlInterface:
                service_uuid,
                out_var,
                self.device_registry_url,
-               self.assignment_agent_url]
+               self.assignment_agent_url,
+               self.docker]
         queue.put(inp)
 
     def init_default_clients(self, number_of_clients):

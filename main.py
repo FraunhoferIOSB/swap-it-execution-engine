@@ -1,18 +1,21 @@
 import asyncio
 from execution_engine_logic.execution_engine import ExecutionEngine
-from dispatcher.dispatcher_configuration import PfdlDispatcherConfig
+from dispatcher.dispatcher_configuration import DispatcherConfig
 
-pfdl_directory = "./PFDL_Examples/"
-pfdl_file_name = ["patient_zero.pfdl"]
-global path_to_pfdl
+
+
+#pfdl_directory = "./PFDL_Examples/"
+#pfdl_file_name = ["patient_zero.pfdl"]
+
+pfdl_directory = "./Tutorial/PFDl/"
+pfdl_file_name = ["dynamic.pfdl"]
+
 path_to_pfdl = pfdl_directory + pfdl_file_name[0]
 
-#set up iteration time
-iteration_time = 0.00001
-number_default_clients = 5
 
-device_registry_url = "opc.tcp://localhost:8000"
-execution_engine_server_url = "opc.tcp://localhost:4000"
+
+
+
 
 
 #docker
@@ -21,27 +24,22 @@ execution_engine_server_url = "opc.tcp://localhost:4000"
 #execution_engine_server_url = "opc.tcp://execution_engine:4000"
 #dashboard_host_address = "http://dashboard:8080"
 
-
-
-
-assignment_agent_url = None
+number_default_clients = 5
+device_registry_url = "opc.tcp://localhost:8000"
+execution_engine_server_url = "opc.tcp://localhost:4000"
+dashboard = "http://localhost:8080"
 service_tracking = True
-delay_start = None
+docker = True
 
 if __name__ == "__main__":
-    dispatcher = PfdlDispatcherConfig(path_to_pfdl)
-    dispatcher.config_dispatcher()
-
 
     main_loop = asyncio.new_event_loop()
     main_loop.run_until_complete(ExecutionEngine(
-                         execution_engine_server_url,
-                         iteration_time,
-                         service_tracking,
-                         number_default_clients,
-                         device_registry_url,
-                         assignment_agent_url,
-                         dispatcher.dispatcher_object,
-                         delay_start
+                         server_url=execution_engine_server_url,
+                         dispatcher_object=DispatcherConfig(filepath=path_to_pfdl, dashboard_host_address=dashboard).dispatcher_object,
+                         log_info=service_tracking,
+                         device_registry_url=device_registry_url,
+                         docker=docker,
+                         number_default_clients=number_default_clients
                          ).main())
 

@@ -7,9 +7,7 @@ from execution_engine_logic.data_types.types import EngineStruct
 
 class CallbackHelpers:
 
-    def __init__(self, server, read_pfdl, data_object):
-        self.server = server
-        self.read_pfdl = read_pfdl
+    def __init__(self, data_object):
         self.data_object = data_object
 
     def get_input_names_and_types(self, input_parameters):
@@ -19,7 +17,7 @@ class CallbackHelpers:
             data_types.append(value)
         return names, data_types
 
-    async def create_task_variables(self, input_parameters, context, server, server_instance, opcua_data_converter):
+    async def create_task_variables(self, input_parameters, context, server, opcua_data_converter):
         task_input_type = {"Input": [], "Input_Value": []}
         for item in input_parameters:
             if isinstance(item, EngineStruct):
@@ -58,7 +56,6 @@ class CallbackHelpers:
                             value = val
                             break
                 values[i] = value
-            #single structure
             elif isinstance(values[i], str):
                 values[i] = await self.data_object.read_struct_values(context, names[i])
         return names, values

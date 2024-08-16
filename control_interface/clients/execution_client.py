@@ -31,11 +31,12 @@ class ExecutionClient:
         self.out_var = None
         self.device_registry_url = None
         self.assignment_agent_url = None
+        self.docker = None
 
     async def initiate_service_execution(self, service_browse_name, tar_server_url, inp_args, task_uuid, service_uuid, out_var, device_registry_url, assignment_agent_url):
         await self.server.data_object.write_state_variable(task_uuid, self.server.service_execution_states[1])
         if(tar_server_url == "None"):
-            agent = await AssignAgent().allocate_job_to_agent(service_browse_name, inp_args, device_registry_url, assignment_agent_url, self.server.custom_data_types)
+            agent = await AssignAgent(self.docker).allocate_job_to_agent(service_browse_name, inp_args, device_registry_url, assignment_agent_url, self.server.custom_data_types)
             await self.execute_service(agent, service_browse_name, service_uuid, task_uuid, out_var, inp_args)
         else:
             await self.execute_service(tar_server_url, service_browse_name, service_uuid, task_uuid, out_var, inp_args)
@@ -93,6 +94,7 @@ class ExecutionClient:
         self.out_var = inp[5]
         self.device_registry_url = inp[6]
         self.assignment_agent_url = inp[7]
+        self.docker = inp[8]
         self.connected = True
 
     def reset_connection(self):
@@ -105,4 +107,5 @@ class ExecutionClient:
         self.connected = False
         self.device_registry_url = None
         self.assignment_agent_url = None
+        self.docker = None
 

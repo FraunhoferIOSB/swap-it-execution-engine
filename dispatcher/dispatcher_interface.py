@@ -8,12 +8,11 @@ from execution_engine_logic.data_types.internal_data_converter import EngineOpcU
 from execution_engine_logic.data_types.types import EngineStruct
 import asyncio, nest_asyncio
 
-class Dispatcher:
+class DispatcherInterface:
 
     def __init__(self):
         self.dispatcher = None
         self.structs = None
-        self.temp_structs = None
         self.dispatcher_callbacks = None
         self.server = None
         self.ee_opc_ua_converter = EngineOpcUaDataConverter()
@@ -41,9 +40,8 @@ class Dispatcher:
         self.register_dispatcher_callbacks()
         self.server = server
 
-    def set_process_parameter(self, structs, temp_structs):
+    def set_process_parameter(self, structs):
         self.structs = structs
-        self.temp_structs = temp_structs
 
     def set_interfaces(self, task_started, task_finished, service_finished, service_started, data_provider):
         self.task_started_interface = task_started
@@ -69,18 +67,15 @@ class Dispatcher:
 
 
     def task_finished_callback_wrapper(self, name, uuid, task_context_uuid, output_parameter):
-         #todo output_parameter = list with variable names, z.b. [order]
         self.callback_loop.run_until_complete(self.dispatcher_callbacks.task_finished_cb(name, uuid, task_context_uuid, output_parameter))
 
     def task_started_callback_wrapper(self, task_name, task_uuid, task_context_uuid, task_input_parameter_names, task_input_parameter_instances):
-        #todo api beschreibung: task_input_parameter_names ordered_dict {variable_name, data_type_name}, task_input_parameter_instances in EE format
         self.callback_loop.run_until_complete(self.dispatcher_callbacks.task_started_cb(task_name, task_uuid, task_context_uuid, task_input_parameter_names, task_input_parameter_instances))
 
     def service_finished_callback_wrapper(self, name, task_context_uuid, service_uuid):
         self.callback_loop.run_until_complete(self.dispatcher_callbacks.service_finished_cb(name, task_context_uuid, service_uuid))
 
     def service_started_callback_wrapper(self, name, service_uuid, task_context_uuid, input_parameters, output_parameters):
-        #todo api beschreibung input_parameters in EE format, output_parameters ordered_dict {variable_name, data_type_name}
         input_parameters = self.map_input_parameters_to_opcua(input_parameters)
         self.callback_loop.run_until_complete(self.dispatcher_callbacks.service_started_cb(name, service_uuid, task_context_uuid, input_parameters , output_parameters))
 

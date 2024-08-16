@@ -6,8 +6,7 @@
 
 from asyncua import Server
 from execution_engine_logic.service_execution.execution_results import ExecutionParameterList
-from execution_engine_logic.data_types.generate_opcua_server_types import GeneratePfdlTypes
-
+from execution_engine_logic.data_types.opcua_type_generator import TypeGenerator
 
 class ExecutionEngineServer:
 
@@ -19,8 +18,6 @@ class ExecutionEngineServer:
         self.idx = None
         self.data_object = None
         self.custom_data_types = None
-        self.sync_result_data_type_exists = None
-        self.async_result_data_type_exists = None
         self.parameters = ExecutionParameterList()
         self.service_execution_states = [
             "ReadyForExecution",
@@ -41,7 +38,7 @@ class ExecutionEngineServer:
         self.data_object = data_object
         self.data_object.set_idx(self.idx)
         self.data_object.set_server(self.server)
-        await GeneratePfdlTypes(self.server, self.idx).create_parameter_struct_data_types(struct_object)
+        await TypeGenerator(self).create_opcua_types(struct_object)
         self.custom_data_types = await self.data_object.opcua_declarations.load_custom_data_types()
         await self.data_object.opcua_declarations.instantiate_data_object()
         return self.server

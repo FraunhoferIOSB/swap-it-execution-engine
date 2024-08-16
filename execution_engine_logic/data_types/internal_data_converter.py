@@ -11,7 +11,8 @@ class EngineOpcUaDataConverter:
     def create_opcua_format(self, server, value):
         return self.convert_to_opcua_struct(value, server.custom_data_types, value.data_type)
     def instantiate_struct(self, struct, kwargs):
-        return struct(**kwargs)
+        val = struct(**kwargs)
+        return val
     def create_kwargs(self,names, values):
         kwargs = {}
         for i in range(len(names)):
@@ -20,17 +21,14 @@ class EngineOpcUaDataConverter:
     def convert_to_opcua_struct(self, struct, custom_types, target_type):
         names, values = [], []
         for name, value in struct.attributes.items():
+            names.append(name)
             if isinstance(value, EngineStruct):
-                names.append(name)
                 values.append(self.resolve_struct(value, custom_types, value.data_type))
             elif isinstance(value, EngineArray):
-                names.append(name)
                 values.append(self.resolve_array(value.values, custom_types, value.data_type))
             else:
-                names.append(name)
                 values.append(value)
-        kwargs = self.create_kwargs(names, values)
-        return self.instantiate_struct(self.get_custom_type_object(str(target_type), custom_types), kwargs)
+        return self.instantiate_struct(self.get_custom_type_object(str(target_type), custom_types), self.create_kwargs(names, values))
 
     def resolve_array(self, array, custom_types, target_type):
         array_value = []
@@ -45,17 +43,14 @@ class EngineOpcUaDataConverter:
     def resolve_struct(self, struct, custom_types, target_type):
         names, values = [], []
         for name, value in struct.attributes.items():
+            names.append(name)
             if isinstance(value, EngineStruct):
-                names.append(name)
                 values.append(self.resolve_struct(value, custom_types, value.data_type))
             elif isinstance(value, EngineArray):
-                names.append(name)
                 values.append(self.resolve_array(value.values, custom_types, value.data_type))
             else:
-                names.append(name)
                 values.append(value)
-        kwargs = self.create_kwargs(names, values)
-        return self.instantiate_struct(self.get_custom_type_object(str(target_type), custom_types), kwargs)
+        return self.instantiate_struct(self.get_custom_type_object(str(target_type), custom_types), self.create_kwargs(names, values))
 
     def get_custom_type_object(self, name, custom_types):
         for i in range(len(custom_types["Name"])):
