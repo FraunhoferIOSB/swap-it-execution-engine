@@ -1,0 +1,3 @@
+#docker-compos python dependencies
+python-on-whales
+coverage

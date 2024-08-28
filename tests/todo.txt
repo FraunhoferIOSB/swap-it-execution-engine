@@ -1,0 +1,8 @@
+
+Tests:
+    Data Object:
+        internal Data Transformer
+        add/remove tasks
+
+    Control Interface:
+        to test execution_client.py and control_interface.py a running execution engine is required,
