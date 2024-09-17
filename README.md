@@ -9,6 +9,13 @@
 ```
     pip install -r requirements.txt
 ```
+
+## Python Version
+
+```
+    3.10.14
+```
+
 ## Start the ExecutionEngine
 
 To start the ExecutionEngine, it is required to adjust some parameters in the start_execution_engine.py file:
