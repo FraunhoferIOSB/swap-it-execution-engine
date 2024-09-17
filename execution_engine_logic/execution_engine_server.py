@@ -30,7 +30,7 @@ class ExecutionEngineServer:
         await self.server.init()
         self.server.set_server_name("Execution Engine")
         self.server.set_endpoint(self.server_url)
-        self.idx = await self.server.register_namespace("http://exection_engine.fraunhofer.de")
+        self.idx = await self.server.register_namespace("http://exection_engine.fraunhofer.iosb.de")
         self.data_object = None
 
     async def start_server(self, struct_object, data_object):
@@ -44,7 +44,7 @@ class ExecutionEngineServer:
         return self.server
 
     async def stop_server(self):
-        self.custom_data_types = None
+        #self.custom_data_types = None
         await self.server.stop()
 
 

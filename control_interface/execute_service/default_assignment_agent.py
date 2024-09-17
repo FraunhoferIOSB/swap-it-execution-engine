@@ -15,15 +15,18 @@ class DefaultAssignmentAgent:
     async def find_target_resource(self):
         async with Client(url=self.device_registry_url) as client:
             await client.load_type_definitions()
-            for agent in self.agent_list:
-                queue = await self.browse_children(client.get_node(agent))
-                self.agents["NodeId"].append(agent)
-                if isinstance(queue, list):
-                    self.agents["QueueElements"].append(len(queue))
-                else:
-                    self.agents["QueueElements"].append(0)
-            target_agent = await client.get_node(self.agents["NodeId"][self.agents["QueueElements"].index(min(self.agents["QueueElements"]))]).read_browse_name()
-            return target_agent.Name
+            if isinstance(self.agent_list, list):
+                for agent in self.agent_list:
+                    queue = await self.browse_children(client.get_node(agent))
+                    self.agents["NodeId"].append(agent)
+                    if isinstance(queue, list):
+                        self.agents["QueueElements"].append(len(queue))
+                    else:
+                        self.agents["QueueElements"].append(0)
+                target_agent = await client.get_node(self.agents["NodeId"][self.agents["QueueElements"].index(min(self.agents["QueueElements"]))]).read_browse_name()
+                return target_agent.Name
+            else:
+                return None
 
     async def browse_children(self, node):
         children = await node.get_children()

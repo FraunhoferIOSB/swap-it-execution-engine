@@ -61,18 +61,25 @@ class OpcUaEngineDataConverter:
 
     def convert_opcua_to_ee(self, variable_name, struct, server):
         variable = EngineStruct(variable_name)
-        variable.data_type = server.data_object.get_name_fromNodeId(struct.data_type)
-        for (name, value) in struct.__dict__.items():
-            if isinstance(value, str) or isinstance(value, bool) or isinstance(value, int):
-                variable.attributes[name] = value
-            elif isinstance(value, list):
-                vals = EngineArray(name, len(value))
-                vals.data_type = server.data_object.get_name_fromNodeId(value[0].data_type)
-                for i in range(len(value)):
-                    vals.values.append(self.convert_opcua_to_ee(name, value[i], server))
-                    variable.attributes[name] = vals
-            else:
-                variable.attributes[name] = self.convert_opcua_to_ee(name, value, server)
+        variable.data_type = server.data_object.get_name_fromNodeId(struct.data_type) if hasattr(struct, "data_type") else type(struct).__name__
+        structure_type = False
+        for i in server.custom_data_types["Class"]:
+            if isinstance(struct, i):
+                structure_type = True
+        if structure_type:
+            for (name, value) in struct.__dict__.items():
+                if isinstance(value, str) or isinstance(value, bool) or isinstance(value, int) or isinstance(value, float):
+                    variable.attributes[name] = value
+                elif isinstance(value, list):
+                    vals = EngineArray(name, len(value))
+                    vals.data_type = server.data_object.get_name_fromNodeId(value[0].data_type) if hasattr(struct, "data_type") else type(value[0]).__name__
+                    for i in range(len(value)):
+                        vals.values.append(self.convert_opcua_to_ee(name, value[i], server))
+                        variable.attributes[name] = vals
+                else:
+                    variable.attributes[name] = self.convert_opcua_to_ee(name, value, server)
+        else:
+            variable = struct
         return variable
 
 

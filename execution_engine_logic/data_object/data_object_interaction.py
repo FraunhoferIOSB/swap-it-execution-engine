@@ -41,28 +41,34 @@ class DataObject:
         node = self.server.get_node(node)
         await self.server.delete_nodes([node])
 
-    async def read_struct_values(self, task_uuid,variable_name):
+    async def read_struct_values(self, task_uuid, variable_name):
         struct = self.server.get_node(
             ua.NodeId(Identifier=uuid.UUID(task_uuid), NamespaceIndex=self.idx, NodeIdType=ua.NodeIdType.Guid))
-        children = await struct.get_children()
-        for child in children:
+        for child in await struct.get_children():
             bn = await child.read_browse_name()
             if str(bn.Name) == str(variable_name):
                 variable_value = await child.read_value()
-                return variable_value
+                return variable_value, child
+        return None, None
 
     async def add_struct_variable(self, names, data_types, values, context, server_instance, server):
         current_task_node = server_instance.get_node(
             ua.NodeId(Identifier=uuid.UUID(context), NamespaceIndex= self.idx, NodeIdType=ua.NodeIdType.Guid))
         for i in range(len(names)):
             if isinstance(data_types[i], ua.NodeId):
-                node_id = data_types[i]
+                self.node_id = data_types[i]
+            elif str(data_types[i]) == 'number':
+                self.node_id = ua.NodeId(Identifier=11)
+            elif str(data_types[i]) == 'string':
+                self.node_id = ua.NodeId(Identifier=12)
+            elif str(data_types[i]) == 'boolean':
+                self.node_id = ua.NodeId(Identifier=1)
             else:
-                node_id = self.get_nodeId_fromType(data_types[i])
-                if node_id is None:
-                    node_id = await server_instance.nodes.root.get_child([*server.data_object.opcua_declarations.path_to_custom_structs, str(self.idx) + ":" + str(data_types[i])])
-                node_id = ua.NodeId.from_string(str(node_id))
-            await current_task_node.add_variable(self.idx, names[i], values[i], datatype=node_id)
+                self.node_id = self.get_nodeId_fromType(data_types[i])
+                if self.node_id is None:
+                    self.node_id = await server_instance.nodes.root.get_child([*server.data_object.opcua_declarations.path_to_custom_structs, str(self.idx) + ":" + str(data_types[i])])
+                self.node_id = ua.NodeId.from_string(str(self.node_id))
+            await current_task_node.add_variable(self.idx, names[i], values[i], datatype=self.node_id)
 
     def get_nodeId_fromType(self, name):
         for i in range(len(self.opcua_declarations.custom_data_types["Name"])):

@@ -9,9 +9,9 @@ import asyncio
 
 class ServiceEvents:
 
-    def __init__(self, client, server, handler, service_finished_event_type_node):
+    def __init__(self, client, iteration_time, handler, service_finished_event_type_node):
         self.client = client
-        self.server = server
+        self.iteration_time = iteration_time
         self.handler = handler
         self.event = None
         self.service_finished_event_type_node = service_finished_event_type_node
@@ -53,12 +53,14 @@ class ServiceEvents:
             await subscription.subscribe_events(self.client.get_node(self.server_node), self.event,
                                                 evfilter=ua.EventFilter(await self.create_select_clause(browse_names),
                                                                         WhereClause=await self.set_where_clause()))
+        return self.event, ua.EventFilter(await self.create_select_clause(browse_names),
+                                                                        WhereClause=await self.set_where_clause())
 
     async def wait_event_results(self, handler):
         event_notification = False
         while event_notification == False:
             event_notification = handler.event_received
-            await asyncio.sleep(self.server.iteration_time)
+            await asyncio.sleep(self.iteration_time)
         return handler.event_results
 
 

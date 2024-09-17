@@ -61,14 +61,14 @@ class DispatcherConfig:
                                                          task_api.task.output_parameters)
 
     def service_finished_interface(self, service_api: ServiceAPI):
-        self.dispatcher_object.service_finished_callback_wrapper(service_api.service.name, service_api.task_context.uuid,
-                                                            service_api.uuid)
+        self.dispatcher_object.service_finished_callback_wrapper(service_api.service.name,
+                                                            service_api.uuid, service_api.task_context.uuid)
 
     def service_started_interface(self, service_api: ServiceAPI):
         input_parameters = self.map_input_parameters_to_EE(service_api.input_parameters)
-        self.dispatcher_object.service_started_callback_wrapper(service_api.service.name, service_api.uuid,
-                                                           service_api.task_context.uuid, input_parameters,
-                                                           service_api.service.output_parameters)
+        self.dispatcher_object.service_started_callback_wrapper(service_api.service.name, service_api.uuid, input_parameters,
+                                                           service_api.service.output_parameters,
+                                                           service_api.task_context.uuid)
 
     def data_provider_interface(self, variable_name, task_id):
         variable_name, struct = self.dispatcher_object.provide_parameter_wrapper(variable_name, task_id.uuid)
@@ -92,18 +92,19 @@ class EePfdlConverter:
     def convert_ee_to_pfdl(self, variable_name, server_struct):
         variable = Struct()
         variable.name = variable_name
-        for (name, value) in server_struct.attributes.items():
-            if isinstance(value, str) or isinstance(value, bool) or isinstance(value, int):
-                variable.attributes[name] = value
-            elif isinstance(value, EngineArray):
-                vals = Array()
-                vals.length = value.length
-                vals.name = name
-                for i in range(value.length):
-                    vals.values.append(self.convert_ee_to_pfdl(name, value.values[i]))
-                    variable.attributes[name] = vals
-            else:
-                variable.attributes[name] = self.convert_ee_to_pfdl(name, value)
+        if isinstance(server_struct, EngineStruct):
+            for (name, value) in server_struct.attributes.items():
+                if isinstance(value, str) or isinstance(value, bool) or isinstance(value, int) or isinstance(value, float):
+                    variable.attributes[name] = value
+                elif isinstance(value, EngineArray):
+                    vals = Array()
+                    vals.length = value.length
+                    vals.name = name
+                    for i in range(value.length):
+                        vals.values.append(self.convert_ee_to_pfdl(name, value.values[i]))
+                        variable.attributes[name] = vals
+                else:
+                    variable.attributes[name] = self.convert_ee_to_pfdl(name, value)
         return variable
 
 class PfdlEeDataconverter:

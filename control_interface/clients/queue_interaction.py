@@ -6,7 +6,6 @@
 import asyncio, uuid
 from asyncua import ua
 
-
 class TargetServerQueue:
     def __init__(self, iteration_time, client):
         self.data_type = "Queue_Data_Type"

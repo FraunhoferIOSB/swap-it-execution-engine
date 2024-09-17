@@ -36,9 +36,9 @@ class InstantiateTypes:
     async def instantiate_task_object(self, task_uuid, task_name, task_context_uuid):
         task_object = await self.types.taks_object_type(task_name)
         node_id = ua.NodeId(Identifier=uuid.UUID(task_uuid), NamespaceIndex=self.idx, NodeIdType=ua.NodeIdType.Guid)
-        if task_name == "productionTask":
+        if str(task_uuid) == str(task_context_uuid):
             data_lifcycle_object = await self.server.nodes.objects.get_child([str(self.idx)+ ":" + self.life_cycle_name])
-            await data_lifcycle_object.add_object(node_id, task_uuid, task_object.nodeid)
+            await data_lifcycle_object.add_object(node_id, "2:"+task_uuid, task_object.nodeid)
         else:
             prod_task = self.server.get_node(ua.NodeId(Identifier=uuid.UUID(task_context_uuid), NamespaceIndex=self.idx, NodeIdType=ua.NodeIdType.Guid))
-            await prod_task.add_object(node_id, task_uuid, task_object.nodeid)
+            await prod_task.add_object(node_id, "2:"+task_uuid, task_object.nodeid)

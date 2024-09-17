@@ -28,12 +28,26 @@ class CallbackHelpers:
                 task_input_type["Input_Value"].append("Read from task context")
         for i in range(len(task_input_type['Input_Value'])):
             if (str(task_input_type['Input_Value'][i]) == "Read from task context"):
-                task_input_type['Input_Value'][i] = await self.data_object.read_struct_values(context, str(
-                    task_input_type['Input'][i]))
+                if isinstance(task_input_type["Input"][i], list):
+                    task_input_type['Input_Value'][i] = await self.browse_struct_fields(context, task_input_type["Input"][i])
+                    #task_input_type['Input_Value'][i], _ = await self.data_object.read_struct_values(context, str(task_input_type['Input'][i][0]))
+                    #for j in range(len(task_input_type['Input'][i][1:])):
+                    #    task_input_type['Input_Value'][i] = getattr(task_input_type['Input_Value'][i], task_input_type['Input'][i][j])
+                else:
+                    task_input_type['Input_Value'][i], _ = await self.data_object.read_struct_values(context, str(
+                        task_input_type['Input'][i]))
             else:
                 task_input_type['Input_Value'][i] = opcua_data_converter.create_opcua_format(server, task_input_type['Input_Value'][i])
         return task_input_type
 
+    async def browse_struct_fields(self, context, task_input_type_input):
+        task_input_type_value, _ = await self.data_object.read_struct_values(context, str(task_input_type_input[0]))
+        for j in range(len(task_input_type_input[1:])):
+            if task_input_type_input[j+1][0] == '[' and task_input_type_input[j+1][len(task_input_type_input[j+1])-1] == ']':
+                task_input_type_value = task_input_type_value[int(task_input_type_input[j+1][1:-1])]
+            else:
+                task_input_type_value = getattr(task_input_type_value, task_input_type_input[j+1])
+        return task_input_type_value
     def classify_service_input(self, input_parameter):
         Task_Input_Structs, Task_Input_Structs_Values = [], []
         for i in range(len(input_parameter)):
@@ -48,16 +62,13 @@ class CallbackHelpers:
     async def read_struct_value_from_data_object(self, names, values, context):
         for i in range(len(names)):
             if isinstance(values[i], list):
-                value = await self.data_object.read_struct_values(context, values[i][0])
+                value, _ = await self.data_object.read_struct_values(context, values[i][0])
                 path = values[i][1:]
                 for j in range(len(path)):
-                    for key, val in value.__dict__.items():
-                        if str(key) == str(path[j]):
-                            value = val
-                            break
+                    value = getattr(value,path[j])
                 values[i] = value
             elif isinstance(values[i], str):
-                values[i] = await self.data_object.read_struct_values(context, names[i])
+                values[i], _ = await self.data_object.read_struct_values(context, names[i])
         return names, values
 
     def read_service_output_parameter(self, element_value):
@@ -70,14 +81,36 @@ class CallbackHelpers:
         task_output_parameters.append(struct_name)
         return task_output_parameters
 
-    def check_for_resource_assignment(self, server, input_parameter):
+    def check_for_target_type(self, server, input_parameter, target_type):
         res = None
         for i in range(len(server.custom_data_types["Name"])):
-            if str(server.custom_data_types["Name"][i]) == "ResourceAssignment":
+            if str(server.custom_data_types["Name"][i]) == str(target_type):
                 res = server.custom_data_types["Class"][i]()
         for i in range(len(input_parameter)):
             if isinstance(input_parameter[i], type(res)):
                 for key, value in input_parameter[i].__dict__.items():
                     return value
+        return None
 
+    def check_for_assignment_agent(self, server, input_parameter):
+        res = None
+        for i in range(len(server.custom_data_types["Name"])):
+            if str(server.custom_data_types["Name"][i]) == "AssignmentAgent":
+                res = server.custom_data_types["Class"][i]()
+        for i in range(len(input_parameter)):
+            if isinstance(input_parameter[i], type(res)):
+                for key, value in input_parameter[i].__dict__.items():
+                    return value
+        return None
+
+    def check_for_registry(self, server, input_parameter):
+        res = None
+        for i in range(len(server.custom_data_types["Name"])):
+            if str(server.custom_data_types["Name"][i]) == "DeviceRegistry":
+                res = server.custom_data_types["Class"][i]()
+        for i in range(len(input_parameter)):
+            if isinstance(input_parameter[i], type(res)):
+                for key, value in input_parameter[i].__dict__.items():
+                    return value
+        return None
 

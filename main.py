@@ -4,19 +4,15 @@ from dispatcher.dispatcher_configuration import DispatcherConfig
 
 
 
-#pfdl_directory = "./PFDL_Examples/"
-#pfdl_file_name = ["patient_zero.pfdl"]
+pfdl_directory = "./PFDL_Examples/"
+#pfdl_file_name = ["advanced.pfdl"]
+#pfdl_file_name = ["advanced.pfdl"]
+pfdl_file_name = ["patient_zero.pfdl"]
 
-pfdl_directory = "./Tutorial/PFDl/"
-pfdl_file_name = ["dynamic.pfdl"]
+#pfdl_directory = "./Tutorial/PFDl/"
+#pfdl_file_name = ["dynamic.pfdl"]
 
 path_to_pfdl = pfdl_directory + pfdl_file_name[0]
-
-
-
-
-
-
 
 #docker
 #device_registry_url = "opc.tcp://host.docker.internal:8000"
@@ -28,6 +24,7 @@ number_default_clients = 5
 device_registry_url = "opc.tcp://localhost:8000"
 execution_engine_server_url = "opc.tcp://localhost:4000"
 dashboard = "http://localhost:8080"
+
 service_tracking = True
 docker = True
 

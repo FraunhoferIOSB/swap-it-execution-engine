@@ -4,7 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-class ExecutionParameter():
+class ExecutionParameter:
 
     def __init__(self, service_uuid: str, context: str, service_results: [], output_variables: [], output_variable_type: [], name: str):
         self.service_uuid = service_uuid
@@ -27,6 +27,3 @@ class ExecutionParameterList:
             if str(self.parameters[i].service_uuid) == str(service_uuid):
                 del self.parameters[i]
                 return
-
-
-

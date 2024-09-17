@@ -4,7 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 from asyncua import Client
-from control_interface.target_server.default_assignment_agent import DefaultAssignmentAgent
+from control_interface.execute_service.default_assignment_agent import DefaultAssignmentAgent
 import asyncio, nest_asyncio
 
 class AssignAgent:
@@ -19,11 +19,12 @@ class AssignAgent:
         async with Client(url=device_registry_url) as client:
             agent_list = await self.get_agents_from_the_device_registry(client, filter_agent_method_arguments)
             await client.disconnect()
+            if agent_list == None:
+                return agent_list
         if(assignment_agent_url == None):
             resource = await DefaultAssignmentAgent(device_registry_url, agent_list).find_target_resource()
             if self.docker == True:
-                resource = resource.split(":")
-                resource = "opc.tcp://localhost:"+str(resource[len(resource )-1])
+                resource = self.convert_url_from_docker(resource)
             return resource
         else:
         #external assignment agend
@@ -33,6 +34,9 @@ class AssignAgent:
                 await client.disconnect()
             return agent
 
+    def convert_url_from_docker(self, resource):
+        resource = resource.split(":")
+        return "opc.tcp://localhost:" + str(resource[len(resource) - 1])
     async def create_filter_agent_input_arguments(self, inp_args, service_browse_name, custom_data_types):
         capability_struct = self.get_capability_struct(str(service_browse_name) + "_Capabilities", custom_data_types)
         if capability_struct != None:

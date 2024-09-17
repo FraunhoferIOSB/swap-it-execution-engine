@@ -39,7 +39,9 @@ class ExecutionEngine:
             await asyncio.sleep(self.delay_start)
         await self.start_server(self.dispatcher.structs, DataObject(EngineOpcUaDataConverter()))
         self.dispatcher.set_callbacks(self.server_instance, self.server)
-        ClientControlInterface = ControlInterface(self.server, self.server_instance, self.dispatcher.dispatcher_callbacks.service_execution_list, TargetServerList(self.server), self.device_registry_url, self.assignment_agent_url, self.docker)
+        ClientControlInterface = ControlInterface(self.server, self.server_instance, self.dispatcher.dispatcher_callbacks.service_execution_list,
+                                                  TargetServerList(self.server, self.iteration_time), self.device_registry_url, self.assignment_agent_url, self.docker,
+                                                  self.iteration_time, self.log_info)
         ClientControlInterface.init_default_clients(self.number_default_clients)
         self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
         self.dispatcher.start_dispatcher()
@@ -56,6 +58,10 @@ class ExecutionEngine:
             for i in range(len(ClientControlInterface.client_dict["Client"])):
                 ClientControlInterface.client_dict["Client"][i].stop_control_interface_loop()
             print("[", datetime.now(), "] Shut down the Execution Engine ", self.server_instance)
+            while True:
+                await asyncio.sleep(1)
             await self.server.stop_server()
             print("[", datetime.now(), "] Execution Engine Completed the Process Execution")
+
+
 

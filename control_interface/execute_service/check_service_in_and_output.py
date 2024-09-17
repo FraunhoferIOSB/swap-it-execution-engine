@@ -6,9 +6,6 @@
 from asyncua.sync import ua
 class CheckServiceMethodArguments:
 
-    def __init__(self, server):
-        self.server = server
-
     async def browse_method_arguments(self, methodId, client, sync_node, async_node, event_node, service_bn, cust_types):
         methodId = client.get_node(methodId)
         args = await methodId.get_properties()
@@ -79,13 +76,13 @@ class CheckServiceMethodArguments:
             for i in range(len(dlo_service_input[0])):
                 if str(dlo_service_input[0][i]) == str('Literal'):
                     break
-                elif str(argument[0]) == str(dlo_service_input[0][i]) and isinstance(dlo_service_input[1][i], type(datatype)):
+                elif str(argument[0]) == str(dlo_service_input[0][i]) and (isinstance(dlo_service_input[1][i], type(datatype)) or str(type(dlo_service_input[1][i]).__name__) == str(type(datatype).__name__)):
                     match = True
                     param, dlo_service_input = self.add_input_argument(param, dlo_service_input, i)
                     break
             if match == False:
                 for i in range(len(dlo_service_input[1])):
-                    if isinstance(dlo_service_input[1][i], type(datatype)):
+                    if isinstance(dlo_service_input[1][i], type(datatype)) or str(type(dlo_service_input[1][i]).__name__) == str(type(datatype).__name__):
                         param, dlo_service_input = self.add_input_argument(param, dlo_service_input, i)
                         break
             elif match == False:

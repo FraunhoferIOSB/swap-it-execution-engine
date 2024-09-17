@@ -10,12 +10,11 @@ from execution_engine_logic.service_execution.execution_results import Execution
 
 class TargetServerInstance:
 
-    def __init__(self, url, target_server_list_browsepaths, server):
+    def __init__(self, url, target_server_list_browsepaths, server, iteration_time):
         self.server = server
         self.service_node = None
         self.service_idx = None
         self.execution_node = None
-        self.event_node = None
         self.Input_Arguments = None
         self.Output_Arguments = None
         self.service_object = None
@@ -31,6 +30,7 @@ class TargetServerInstance:
         self.target_server_list_browsepaths = target_server_list_browsepaths
         self.service_arguments = None
         self.explored = False
+        self.iteration_time = iteration_time
 
     async def reveal_server_nodes(self, service_browse_name):
         async with Client(url=self.url) as client:
@@ -44,11 +44,10 @@ class TargetServerInstance:
             self.event_node = await self.browse_event(client)
             await client.disconnect()
 
-    async def match_service_input(self, dlo_service_input, client, server, bn):
-        self.service_arguments = CheckServiceMethodArguments(server)
-        sync_id, async_id = await self.browse_result_data_type_nodes(client)
-        self.Input_Arguments, self.Output_Arguments = await self.service_arguments.browse_method_arguments(self.service_node, client, sync_id, async_id, self.event_node, bn, self.client_custom_data_types)
-        service_parameter = await self.service_arguments.check_input_arguments(dlo_service_input, self.Input_Arguments, server.custom_data_types)
+    async def match_service_input(self, dlo_service_input, client, custom_data_types, bn):
+        self.service_arguments = CheckServiceMethodArguments()
+        self.Input_Arguments, self.Output_Arguments = await self.service_arguments.browse_method_arguments(self.service_node, client, *await self.browse_result_data_type_nodes(client), self.event_node, bn, self.client_custom_data_types)
+        service_parameter = await self.service_arguments.check_input_arguments(dlo_service_input, self.Input_Arguments, custom_data_types)
         return service_parameter
 
     async def browse_module_objects(self, client):
@@ -152,7 +151,7 @@ class TargetServerInstance:
                 await state_variable_node.write_value(5, ua.VariantType.Int32)
                 break
             else:
-                await asyncio.sleep(self.server.iteration_time)
+                await asyncio.sleep(self.iteration_time)
 
     async def client_load_custom_data_types_from_python_server(self, custom_type_definitions, client_custom_data_types):
         for name, obj in custom_type_definitions.items():
@@ -189,5 +188,6 @@ class TargetServerInstance:
             if (str(result["Variable_Data_Type"][i][0][:3]) == 'ua.'):
                 result["Variable_Data_Type"][i][0] = result["Variable_Data_Type"][i][0][3:]
             types.append(result["Variable_Data_Type"][i])
-        self.server.parameters.add_parameter(ExecutionParameter(service_uuid, task_uuid, values, names, types, name))
+        if self.server != None:
+            self.server.parameters.add_parameter(ExecutionParameter(service_uuid, task_uuid, values, names, types, name))
 
