@@ -11,10 +11,20 @@
 Custom Dispatcher Integration
 =============================
 
-Custom integration on the example of the PFDL Scheduler
 
-.. _Dispatcher API:
 
-API
-====
-:ref:`Data Types`
+.. _DispatcherConfig Configuration:
+
+DispatcherConfig Configuration
+====================================
+
+.. _Type Mapping:
+
+Type Mapping
+============
+
+.. _Callbacks:
+
+Callbacks
+=========
+

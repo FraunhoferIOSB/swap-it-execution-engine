@@ -105,17 +105,17 @@ over to the Execution Engine object (Table 2). Table 1 displays the :ref:`Dispat
        | of seconds, otherwise, the process execution starts
        | without delay
    * - docker
-     - bool
+     - string
      - | In case that the Execution Engine interacts with OPC UA
        | server inside a docker environment, it might be possible
        | that the server URL's have to be adjusted, so that the
        | Execution Engine can connect to them from outside the
-       | docker environment. If set to True, the Port from the
+       | docker environment. If set, the Port from the
        | server URL received from an Assignment Agent is extracted
-       | and added to "opc.tcp://localhost:".
+       | and added to the string specified in this argument.
        | For example, if the Execution Engine receives an URL
-       | "opc.tcp://swap_server:4840" docker = True will adjust the
-       | url to "opc.tcp://localhost:4840".
+       | "opc.tcp://swap_server:4840" docker = "opc.tcp://localhost:"
+       | will adjust the url to "opc.tcp://localhost:4840".
 
 .. _simple started:
 
@@ -126,6 +126,7 @@ An Execution Engine can simple be started with:
 
 .. code-block:: python
 
+    git clone https://github.com/FraunhoferIOSB/swap-it-execution-engine.git
     cd swap-it-execution-engine
     python main.py
 
@@ -135,7 +136,7 @@ Ensure that the python version is greater 3.10 and the required python packages 
 
 .. code-block:: python
 
-   pip install asyncua==1.1.5 nest-asyncio==1.6.0 pfdl-scheduler==0.9.0
+   pip install asyncua==1.1.5 nest-asyncio==1.6.0 pfdl-scheduler==0.9.0 coverage==7.6.1 python-on-whales==0.73.0
 
 
 

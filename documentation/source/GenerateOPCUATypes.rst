@@ -87,8 +87,6 @@ and the Key the name that is required as EngineStruct data type, to identify the
    * - Double
      - number
 
-Hier referenz auf API's (provide parameter, service, task started,...)
-
 .. _Data Converter:
 
 Data Converter

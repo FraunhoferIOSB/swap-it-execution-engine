@@ -69,87 +69,107 @@ The DispatcherConfig class can be extended with any kind of variables and functi
      - Configurates the dispatcher for the Execution Engine
 
 
+
 .. list-table:: **Table 2: DispatcherInterface Setter functions**
-   :widths: 50 50 50
+   :widths: 50 100
    :header-rows: 1
 
    * - **Function**
-     - **Arguments**
      - **Explanation**
-   * - set_dispatcher(...)
-     - dispatcher: custom object
-     - | Hands over the custom dispatcher
-       | object to the Execution Engine
-   * - set_process_parameter(...)
-     - structs: :ref:`EngineStruct`
-     - | Hands over the DispatcherConfig struct
-       | variable to the Execution Engine
-   * - set_fire_event_method(...)
-     - fire_event_method: function
-     - | Hands over a function that is executed
-       | whenever the Execution Engine
-       | completes a Service execution. This
-       | function will be registered as
+   * - | set_dispatcher(
+       |    *dispatcher: custom_object*
+       | )
+     - | Hands over the custom dispatcher object to the Execution Engine.
+   * - | set_process_parameter(
+       |    *structs: :ref:`EngineStruct`*
+       | )
+     - | Hands over the DispatcherConfig struct variable to the
+       | Execution Engine.
+   * - | set_fire_event_method(
+       |    *fire_event_method: function*
+       | )
+     - | Hands over a function that is executed whenever the Execution
+       | Engine completes a Service execution. This function
+       | will be registered as :ref:`Service Finished Event Callback`.
+   * - | set_interfaces(
+       |    *task_started: function*
+       |    *task_finished: function*
+       |    *service_finished: function*
+       |    *service_started: function*
+       |    *data_provider: function*
+       | )
+     - | The callback functions the dispatcher executes
+       | (see :ref:`Callback Coupling`).
+   * - | set_register_dispatcher_callbacks(
+       |    *func: function*
+       | )
+     - | Custom function that registers the :ref:`Dispatcher Callbacks` of the
+       | Execution Engine in the custom dispatcher.
+   * - | set_start_dispatcher(
+       |    *func: function*
+       | )
+     - | Registers a function inside the Execution Engine that
+       | starts the custom dispatcher program.
+   * - | set_running(
+       |    *func: function*
+       | )
+     - | Registers a function inside the Execution Engine that returns
+       | a boolean value from the dispatcher that indicates whether the
+       | dispatcher program is still running or not.
+
+
+.. _Callback Coupling:
+Callback Coupling
+=================
+Besides registering functions, the DispatcherInterface provides :ref:`Dispatcher Callbacks` that have to be executed from the dispatcher.
+Here, two problems might occur. First, the Execution Engine's :ref:`Computational Logic` includes threading and asynchronous function execution,
+so that it has to be ensured, that the Execution Engine provides a synchronous interfaces for its callbacks. Second, the callbacks from a custom dispatcher,
+which execute the Execution Engine callbacks, might not provide exactly the input that is required by the Execution Engine's callbacks. To solve this (Figure 1), the
+Execution Engine provide a set of synchronous callbacks, that wrap the asynchronous callbacks and thus, make them executable for synchronous dispatcher callbacks.
+On the side of the custom dispatcher, an applicator might define optional Dispatcher Execution Engine Interfaces. These interfaces are only required in case that the
+Dispatcher Callbacks do not provide the required input format for the Execution Engine (for example, an individual format for data types). Here, the Dispatcher
+Execution Engine Interface can transform the internal Dispatcher formats to the required Execution Engine format, and besides, ensure, that the required input for the
+Execution Engine Callback Wrapper is provided. Further information about the callback coupling can be found in the :ref:`Custom Dispatcher Integration`'s section :ref:`Callbacks`.
+
+
+.. figure:: /images/Coupling.png
+   :alt: Overview
+   :width: 100%
+
+   **Figure 1:** Dispatcher Execution Engine Callback Coupling
+
+Mandatory and Optional Callbacks
+==================================
+As stated before, the Execution Engine only requires a subset of the provided callback functions to be functional. The :ref:`Service Started Callback` and :ref:`Service Finished Callback`
+are mandatory since they control the interaction between the Execution Engine and Devices that offer services. Beside, the :ref:`Service Finished Event Callback` communicates the completion of a
+service back to the Dispatcher. The other three callbacks are optional. Depending on whether :ref:`Tasks and Services` are utilized or only Service, both, the :ref:`Task Started Callback` and the :ref:`Task Finished Callback`
+become mandatory. Independent of Tasks, :ref:`Data Callback` can be realized, so that depending on the Dispatcher Functionality, four combinations of callback functions are possible for an Execution Engine:
+
+.. list-table:: **Table 3: Dispatcher Callback Configurations**
+   :widths: 10 100 10 100
+
+
+   * - | **1**
+     - | :ref:`Service Started Callback`
+       | :ref:`Service Finished Callback`
        | :ref:`Service Finished Event Callback`
-   * - set_interfaces(...)
-     - | task_started: function
-       | task_finished: function
-       | service_finished: function
-       | service_started: function
-       | data_provider: function
-     - | The callback functions the dispatcher
-       | executes. In case that the arguments
-       | of the dispatcher callbacks are equal
-       | to the arguments of the
-       | :ref:`Execution Engine Wrapper Functions`,
-       | the latter can be registered directly.
-       | Otherwise, :ref:`Dispatcher Interface Functions`
-       | are required
-   * - set_register_dispatcher_callbacks(...)
-     - func: function
-     - | Custom function that registers the
-       | :ref:`Dispatcher Callbacks` of the
-       | Execution Engine in the custom
-       | dispatcher
-   * - set_start_dispatcher(...)
-     - func: function
-     - | Registers a function inside the Execution
-       | Engine that starts the custom dispatcher
-       | program
-   * - set_running(...)
-     - func: function
-     - | Registers a function inside the Execution
-       | Engine that returns a boolean value from
-       | the dispatcher that indicates whether the
-       | dispatcher program is still running
+     - | **2**
+     - | :ref:`Service Started Callback`
+       | :ref:`Service Finished Callback`
+       | :ref:`Service Finished Event Callback`
+       | :ref:`Data Callback`
+   * - | **3**
+     - | :ref:`Service Started Callback`
+       | :ref:`Service Finished Callback`
+       | :ref:`Service Finished Event Callback`
+       | :ref:`Task Started Callback`
+       | :ref:`Task Finished Callback`
+     - | **4**
+     - | :ref:`Service Started Callback`
+       | :ref:`Service Finished Callback`
+       | :ref:`Service Finished Event Callback`
+       | :ref:`Task Started Callback`
+       | :ref:`Task Finished Callback`
+       | :ref:`Data Callback`
 
 
-Execution Engine Callbacks
-=============================
-Besides registering functions, the DispatcherInterface provides the callback functions that have to be executed from the dispatcher.
-Since it is not ensured that custom dispatcher callbacks provide the exactly the input arguments that the Execution Engine requires,
-applicators can define callback_interface function, in which the arguments of the custom callbacks are mapped to the required arguments by the execution engine.
-
-.. _Execution Engine Wrapper Functions:
-
-Execution Engine Wrapper Functions
-----------------------------------
-
-.. _Dispatcher Interface Functions:
-
-Dispatcher Interface Functions
-------------------------------
-
-
-
-.. list-table:: **Table 3: callback_interface functions**
-   :widths: 50 50 50
-   :header-rows: 1
-
-   * - **Function**
-     - **Arguments**
-     - **Explanation**
-   * - set_dispatcher(...)
-     - dispatcher: custom object
-     - | Hands over the custom dispatcher
-       | object to the Execution Engine

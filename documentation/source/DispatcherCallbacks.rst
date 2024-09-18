@@ -24,7 +24,7 @@ which only reacts to the invocation of the callbacks. (besides the Service Finis
 
 
 From these six callback, the execution engine only requires the :ref:`Service Started Callback`, :ref:`Service Finished Callback` and the :ref:`Service Finished Event Callback`
-to execute processes. However, in case that
+to execute processes. The additional callbacks are optional and only need to be considered, in case that it is required by the custom dispatcher.
 
 
 .. _Service Started Callback:
@@ -53,13 +53,18 @@ target resource and executes the specified service. The Service Started Callback
      - | UUID of the context (a Task) in which the
        | Service is started
    * - input_parameters
-     - list[union(str, :ref:`EngineStruct`)]
+     - list[union(str, :ref:`EngineStruct`, list[str])]
      - | List with input parameters. Each List element is
        | either a string with a variable name that should
        | be read from the :ref:`Data Object`
        | or a literal value that is provided in the
        | :ref:`EngineStruct` format.
        | It's possible to hand over an empty list.
+       | It's also possible to hand over a "browse
+       | list" to access a field of a structure type.
+       | For example with ["value", "field", "[10]"],
+       | the input value is the "10th" element of the
+       | array "field" in the structure "value".
    * - output_parameters
      - ordered_dictionary
      - | Ordered Dictionary that specifies all output
@@ -129,7 +134,7 @@ newly added :ref:`TaskObject`. It requires the following input arguments:
        | OrderedDict([(variable_name,
        | data_type_name)])
    * - task_input_parameter_instances
-     - list[union(str, :ref:`EngineStruct`)]
+     - list[union(str, :ref:`EngineStruct`, list[str])]
      - | List with input parameters. Each List
        | element is either a string with a variable
        | name that should be read from the
@@ -137,6 +142,11 @@ newly added :ref:`TaskObject`. It requires the following input arguments:
        | or a literal value that is provided in
        | the :ref:`EngineStruct` format.
        | It's possible to hand over an empty list.
+       | It's also possible to hand over a "browse
+       | list" to access a field of a structure type.
+       | For example with ["value", "field", "[10]"],
+       | the input value is the "10th" element of the
+       | array "field" in the structure "value".
 
 
 .. _Task Finished Callback:

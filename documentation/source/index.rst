@@ -29,7 +29,7 @@ communicate the completion of a Service Execution to the scheduler, as well as a
 then be used by the scheduler to e.g., evaluate constructs such as loops or conditions.
 
 As default implementation, we connect the :ref:`PFDL Scheduler` to the execution engine to run it in the SWAP-IT context. However,
-the Execution Engine provides a :ref:`Dispatcher API` to connect the Execution Engine to :ref:`Custom Dispatchers`.
+the Execution Engine provides an API to connect the Execution Engine to :ref:`Custom Dispatchers`.
 
 A small example on how to run the Execution Engine can be found in section :ref:`Getting Started`.
 

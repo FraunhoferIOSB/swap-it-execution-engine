@@ -12,12 +12,12 @@ Computational Logic
 To get a better understanding of the operational logic of an Execution Engine, Figure 1 illustrates its computational logic.
 The OPC UA Server of the Execution, as well as its OPC UA Clients are implemented with the `open source Python asyncio Stack <https://github.com/FreeOpcUa/opcua-asyncio>`_,
 which uses with `asyncio <https://docs.python.org/3/library/asyncio.html>`_ asynchronous programming. Here, an
-EventLoop allows the managing and distribute execution of different operations. However, to effectively execute the separated Client and Server Loops, the Execution Engine's
+EventLoop allows the managing and distributed execution of different operations. However, to effectively execute the separated Client and Server Loops, the Execution Engine's
 OPC UA Server is executed in a main thread and each Client is started in a separate thread with an individual EventLoop.
 
 While the `open source Python asyncio Stack <https://github.com/FreeOpcUa/opcua-asyncio>`_ completely relies on asynchronous programming, a custom dispatcher implementation may not,
 so that it is required to invoke asynchronous operations (Callbacks Dispatcher Interface) from synchronous operations (Dispatcher). Here, the `Python nest_asyncio <https://github.com/erdewit/nest_asyncio>`_
-library allows the nesting of asyncio EventLoops, so that a Dispatcher invocation of an Execution Engine callback is accomplished with a wrapper function that only starts an nested EventLoop,
+library allows the nesting of asyncio EventLoops, so that a Dispatcher invocation of an Execution Engine callback is accomplished with a wrapper function that only starts a nested EventLoop,
 which then executes the actual callback of the dispatcher interface.
 
 The separate processing of the different program functionalities requires interfaces between them to make data available between different EventLoops and threads.
