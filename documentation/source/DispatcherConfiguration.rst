@@ -41,11 +41,12 @@ The DispatcherConfig class can be extended with any kind of variables and functi
             for key,value in ...:
                 self.structs.append(...)
             self.dispatcher_object.set_process_parameter(self.structs)
+            self.dispatcher_object.set_start_dispatcher(...)
+            self.dispatcher_object.set_running(...)
             self.dispatcher_object.set_fire_event_method(...)
             self.dispatcher_object.set_interfaces(...)
             self.dispatcher_object.set_register_dispatcher_callbacks(...)
-            self.dispatcher_object.set_start_dispatcher(...)
-            self.dispatcher_object.set_running(...)
+
 
 
 
@@ -69,6 +70,7 @@ The DispatcherConfig class can be extended with any kind of variables and functi
      - Configurates the dispatcher for the Execution Engine
 
 
+.. _DispatcherInterface Setter functions:
 
 .. list-table:: **Table 2: DispatcherInterface Setter functions**
    :widths: 50 100
@@ -91,15 +93,6 @@ The DispatcherConfig class can be extended with any kind of variables and functi
      - | Hands over a function that is executed whenever the Execution
        | Engine completes a Service execution. This function
        | will be registered as :ref:`Service Finished Event Callback`.
-   * - | set_interfaces(
-       |    *task_started: function*
-       |    *task_finished: function*
-       |    *service_finished: function*
-       |    *service_started: function*
-       |    *data_provider: function*
-       | )
-     - | The callback functions the dispatcher executes
-       | (see :ref:`Callback Coupling`).
    * - | set_register_dispatcher_callbacks(
        |    *func: function*
        | )

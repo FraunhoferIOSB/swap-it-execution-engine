@@ -49,6 +49,7 @@ over to the Execution Engine object (Table 2). Table 1 displays the :ref:`Dispat
        | :ref:`PFDL Scheduler`, the `SWAP-IT Dashboard <https://github.com/iml130/swap-it-dashboard>`_ is provided.
 
 
+.. _Execution Engine Class Argument:
 .. list-table:: **Table 2: Execution Engine Class Arguments**
    :widths: 50 50 50
    :header-rows: 1
@@ -140,10 +141,6 @@ Ensure that the python version is greater 3.10 and the required python packages 
 
 
 
-
-
-Tutorials
-==========
 
 .. toctree::
    :maxdepth: 4
