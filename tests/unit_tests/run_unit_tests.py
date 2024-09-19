@@ -6,9 +6,9 @@
 import sys
 sys.path.append("../")
 import coverage, unittest
-from tests.unit_tests.check_control_interface.run_unit_tests import RunControlInterfaceTests
-from tests.unit_tests.check_execution_engine_logic.run_unit_tests import RunExecutionEngineLogicTests
-from tests.unit_tests.check_dispatcher.run_unit_tests import RunDispatcherTests
+from check_control_interface.run_unit_tests import RunControlInterfaceTests
+from check_execution_engine_logic.run_unit_tests import RunExecutionEngineLogicTests
+from check_dispatcher.run_unit_tests import RunDispatcherTests
 
 
 class ExecuteUnitTests(unittest.TestCase):
