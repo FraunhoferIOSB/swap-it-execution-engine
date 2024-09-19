@@ -1,3 +1,9 @@
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
 import unittest, asyncio, time, uuid
 from asyncua import Client
 from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
@@ -22,7 +28,7 @@ class CheckAssignmentAgent(unittest.TestCase):
             await client.disconnect()
         self.assertIsNot(None, agent_list)
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
-        self.assertEqual(str(target_agent), "opc.tcp://host.docker.internal:4061")
+        self.assertEqual(str(target_agent), "opc.tcp://service_server:4061")
         env.stop_docker_compose()
         cov.stop()
     #from multiple resources
@@ -58,7 +64,7 @@ class CheckAssignmentAgent(unittest.TestCase):
         time.sleep(3)
         #now check the assignment, opc.tcp://localhost:4081 should be assigned, since it has only 2 elements
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
-        self.assertEqual(str(a_agent.convert_url_from_docker(target_agent)), target_server_list[0])
+        self.assertEqual(str(a_agent.convert_to_custom_url(target_agent, "opc.tcp://localhost:")), target_server_list[0])
         #next, remove the elements from server opc.tcp://localhost:4082 and re-assign
         async with Client(url=target_server_list[1]) as client:
             for i in range(elements[1]):
@@ -68,7 +74,7 @@ class CheckAssignmentAgent(unittest.TestCase):
             await client.disconnect()
         time.sleep(3)
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
-        self.assertEqual(str(a_agent.convert_url_from_docker(target_agent)), target_server_list[1])
+        self.assertEqual(str(a_agent.convert_to_custom_url(target_agent, "opc.tcp://localhost:")), target_server_list[1])
         env.stop_docker_compose()
         cov.stop()
 

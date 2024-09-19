@@ -1,14 +1,15 @@
-import coverage, unittest, asyncio, uuid
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
+import unittest, asyncio, uuid
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 from tests.test_helpers.util.server_explorer import CheckServerNamespace
-from asyncua import Client, ua
-
-
-
-
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
+from asyncua import ua
 
 class CheckExecutionEngineServer(unittest.TestCase):
 

@@ -1,0 +1,23 @@
+from asyncua import ua
+import asyncio, coverage, unittests
+
+
+class TestClass(unittest.TestCase):
+
+    async def  .... (self, cov = coverage.Coverage(), custom_server_types = None):
+
+        cov.start()
+
+
+
+        cov.stop()
+        return custom_server_types
+
+
+
+    def run_test(self, cov = coverage.Coverage(), custom_data_types = None):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self.filter_from_literal_input(cov, custom_data_types))
+
+if __name__ == "__main__":
+    unittest.main()

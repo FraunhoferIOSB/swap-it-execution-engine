@@ -6,7 +6,7 @@
 
 services:
   Device_Registry:
-    image: ghcr.io/swap-it/demo-scenario/device_registry:latest
+    image: ghcr.io/swap-it/demo-scenario/device_registry:execution_engine_tutorials
     hostname: device_registry
     expose:
       - 8000
@@ -15,7 +15,7 @@ services:
     networks:
       - demonstration_scenario_network
   Service_Server:
-    image: ghcr.io/swap-it/demo-scenario/demo-scenario:latest
+    image: ghcr.io/swap-it/demo-scenario/demo-scenario:execution_engine_tutorials
     hostname: service_server
     expose:
       - 4051

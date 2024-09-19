@@ -3,51 +3,73 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
 import unittest, coverage, asyncio, time
 from asyncua import Client
 from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.execute_service.assign_agent import AssignAgent
-
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
+from tests.test_helpers.values.ee_structures import DemoScenarioStructureTypes
+from execution_engine_logic.execution_engine_server import ExecutionEngineServer
+from execution_engine_logic.data_object.data_object_interaction import DataObject
+from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class CheckAssignment(unittest.TestCase):
 
-    async def check_static_assignment(self):
-        #todo write the test
-        cov = coverage.Coverage()
+    async def check_static_assignment(self,cov = None, custom_data_types = None):
         cov.start()
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
         server_url = "opc.tcp://localhost:4081"
         iteration_time = 0.001
+        types = DemoScenarioStructureTypes()
+        if custom_data_types == None:
+            #start a server and create the custom types
+            ee_url = "opc.tcp://localhost:4001"
+            server_instance = ExecutionEngineServer(execution_engine_server_url=ee_url, log_info=True,
+                                                    iteration_time=iteration_time)
+            await server_instance.init_server()
+            server = await server_instance.start_server(types.structures, DataObject(EngineOpcUaDataConverter()))
+            custom_data_types = server_instance.custom_data_types
+        capa, _ = self.create_structures(custom_data_types, "ResourceAssignment",
+                               {"job_resource":"opc.tcp://service_server:4081"},
+                               "Milling_Capabilities", {"test_numeric": 5, "test_boolean": False})
+
         # start client, connect to server and explore the server's namespace
         async with Client(url=server_url) as client:
             target_server_list = TargetServerList(None, iteration_time)
             target_server = await target_server_list.get_target_server(server_url, service_browse_name)
             #create the assignment class
-
+            assign_agent = AssignAgent(None)
+            #assign without existing target resource
+            target_agent = await assign_agent.allocate_job_to_agent("Get", [[],[]], "opc.tcp://localhost:8000", None, custom_data_types)
+            self.assertEqual(target_agent, None)
+            print("target_agent",target_agent)
+            # assign without capabilities
+            target_agent = await assign_agent.allocate_job_to_agent("Milling", [[], []], "opc.tcp://localhost:8000", None,
+                                                                    custom_data_types)
+            self.assertEqual(target_agent, "opc.tcp://service_server:4071")
+            print("target_agent", target_agent)
+            #assign with capabilities
+            target_agent = await assign_agent.allocate_job_to_agent("Milling", [["Literal"], [capa]], "opc.tcp://localhost:8000",
+                                                                    None,
+                                                                    custom_data_types)
+            self.assertEqual(target_agent, "opc.tcp://service_server:4071")
+            #todo assign with external agent
+            #todo assign with capability from dlo
         env.stop_docker_compose()
         cov.stop()
-        cov.report(omit=[ignore_files + "_jb_runner_tools.py",
-                         ignore_files + "_jb_serial_tree_manager.py",
-                         ignore_files + "teamcity\common.py",
-                         ignore_files + "teamcity\diff_tools.py",
-                         ignore_files + "teamcity\messages.py",
-                         ignore_files + "teamcity\\unittestpy.py",
-                         "..\\docker_environment\\start_docker_compose.py"
-                         ])
 
+    def create_structures(self, custom_types, assignment_structure, assign_kwargs, capability_structure, capa_kwargs):
+        for i in range(len(custom_types["Name"])):
+            if custom_types["Name"][i] == assignment_structure:
+                self.assignment_structure_opcua = custom_types["Class"][i](assign_kwargs)
+            if custom_types["Name"][i] == capability_structure:
+                self.capability_structure_opcua = custom_types["Class"][i](capa_kwargs)
+        return self.assignment_structure_opcua, self.capability_structure_opcua
 
-    def test_check_assignment(self, cov):
+    def check_assignment(self, cov, custom_data_types):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_static_assignment(cov))
-
-
-
-
-
-if __name__ == "__main__":
-    unittest.main()
+        loop.run_until_complete(self.check_static_assignment(cov, custom_data_types))

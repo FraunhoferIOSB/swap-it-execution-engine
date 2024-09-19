@@ -1,12 +1,16 @@
-import coverage, unittest, asyncio, uuid
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
+import unittest, asyncio
 from asyncua import ua
 from tests.test_helpers.values.ee_structures import DemoScenarioStructureTypes, DemoScenarioOPCUATypeInfo
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 from tests.test_helpers.util.server_explorer import CheckServerNamespace
-
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
 
 class CheckExecutionEngineTypeGenerator(unittest.TestCase):
 
@@ -18,8 +22,7 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
         await server_instance.init_server()
         types = DemoScenarioStructureTypes()
         type_info = DemoScenarioOPCUATypeInfo()
-        structures = [types.swap_order, types.light_segment, types.stand_segment, types.raw_material, types.blank]
-        server = await server_instance.start_server(structures, DataObject(EngineOpcUaDataConverter()))
+        server = await server_instance.start_server(types.structures, DataObject(EngineOpcUaDataConverter()))
         async with server:
             nodeIds = [ua.NodeId(Identifier=1, NamespaceIndex=0), ua.NodeId(Identifier=11, NamespaceIndex=0), ua.NodeId(Identifier=12, NamespaceIndex=0)]
             namespace = CheckServerNamespace(server_instance.idx)
@@ -39,7 +42,6 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
                     self.assertEqual(str(d_type_bn.Name), str(curr_type[j].dataType))
             await server_instance.stop_server()
         cov.stop()
-        print(server_instance.custom_data_types)
         return server_instance.custom_data_types
     def return_nodeId_infor(self, node_list, target_id):
         for i in range(len(node_list)):

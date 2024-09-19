@@ -1,3 +1,9 @@
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
 from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
 from tests.test_helpers.values.service_parameters import ServiceParameter
 from control_interface.target_server.target_server_dict import TargetServerList
@@ -7,12 +13,10 @@ from control_interface.clients.event_subscription import ServiceEvents, SubHandl
 import asyncio, unittest, time
 from asyncua import Client, ua
 
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
-
 class CheckServiceCall(unittest.TestCase):
     async def check_service_call_from_literal(self, cov):
         cov.start()
-        env = DockerComposeEnvironment(["Service_Server"])
+        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"

@@ -1,3 +1,9 @@
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
 from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
 from asyncua import Client
 from control_interface.target_server.target_server_dict import TargetServerList
@@ -8,7 +14,7 @@ class CheckServerBrowsing(unittest.TestCase):
 
     async def check_server_browsing(self, cov):
         cov.start()
-        env = DockerComposeEnvironment(["Service_Server"])
+        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
 
@@ -53,8 +59,9 @@ class CheckServerBrowsing(unittest.TestCase):
         bn = await node.read_browse_name()
         return bn.Name
 
-    def run_test(self, cov):
+    def run_test(self, cov = None, custom_data_types = None):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.check_server_browsing(cov))
+        return custom_data_types
 
 

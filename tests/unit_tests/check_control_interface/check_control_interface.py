@@ -14,7 +14,7 @@ class CheckControlInterface(unittest.TestCase):
         #todo write the test
         cov = coverage.Coverage()
         cov.start()
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
