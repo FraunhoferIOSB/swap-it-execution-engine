@@ -4,14 +4,17 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.values.service_parameters import ServiceParameter
+import os, sys
+sys.path.insert(0, os.path.abspath(".."))
+
+import asyncio, unittest, time
+from asyncua import Client, ua
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.execute_service.check_service_in_and_output import CheckServiceMethodArguments
 from control_interface.execute_service.interprete_result import ServiceResults
 from control_interface.clients.event_subscription import ServiceEvents, SubHandler
-import asyncio, unittest, time
-from asyncua import Client, ua
+from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
+from tests.test_helpers.values.service_parameters import ServiceParameter
 
 class CheckServiceCall(unittest.TestCase):
     async def check_service_call_from_literal(self, cov):

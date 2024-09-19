@@ -4,12 +4,15 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
+import sys
+sys.path.append("check_dispatcher")
+
 import unittest, coverage
-from tests.unit_tests.check_dispatcher.check_task_started_callbacks import CheckTaskStartedDispatcherCallback
-from tests.unit_tests.check_dispatcher.check_task_finished_callback import CheckTaskFinishedDispatcherCallback
-from tests.unit_tests.check_dispatcher.check_data_callbacks import CheckDataDispatcherCallback
-from tests.unit_tests.check_dispatcher.check_service_callbacks import CheckServiceStartedDispatcherCallback
-from tests.unit_tests.check_dispatcher.check_service_input_filtering import CheckServiceStartedInputFiltering
+from check_task_started_callbacks import CheckTaskStartedDispatcherCallback
+from check_task_finished_callback import CheckTaskFinishedDispatcherCallback
+from check_data_callbacks import CheckDataDispatcherCallback
+from check_service_callbacks import CheckServiceStartedDispatcherCallback
+from check_service_input_filtering import CheckServiceStartedInputFiltering
 
 
 class RunDispatcherTests(unittest.TestCase):

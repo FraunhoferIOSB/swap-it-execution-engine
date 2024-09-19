@@ -3,14 +3,15 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-
+import sys
+sys.path.append("check_control_interface")
 import time
 import unittest, coverage
-from tests.unit_tests.check_control_interface.check_service_call import CheckServiceCall
-from tests.unit_tests.check_control_interface.check_target_server import CheckServerBrowsing
-from tests.unit_tests.check_control_interface.check_queue_interaction import QueueInteraction
-from tests.unit_tests.check_control_interface.check_default_assignment_agent import CheckAssignmentAgent
-from tests.unit_tests.check_control_interface.check_assignment import CheckAssignment
+from .check_service_call import CheckServiceCall
+from .check_target_server import CheckServerBrowsing
+from .check_queue_interaction import QueueInteraction
+from .check_default_assignment_agent import CheckAssignmentAgent
+from .check_assignment import CheckAssignment
 class RunControlInterfaceTests(unittest.TestCase):
 
     def run_control_interface_tests(self, cov =None, cusdtom_data_types = None):

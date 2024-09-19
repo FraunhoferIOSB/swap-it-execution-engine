@@ -3,12 +3,14 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+import sys
+sys.path.append("check_execution_engine_logic")
 
 import unittest, coverage
-from tests.unit_tests.check_execution_engine_logic.check_execution_list import CheckExecutionList
-from tests.unit_tests.check_execution_engine_logic.check_execution_engine_server import CheckExecutionEngineServer
-from tests.unit_tests.check_execution_engine_logic.check_opcua_type_generator import CheckExecutionEngineTypeGenerator
-from tests.unit_tests.check_execution_engine_logic.check_data_converter import CheckInternalDataConverter
+from check_execution_list import CheckExecutionList
+from check_execution_engine_server import CheckExecutionEngineServer
+from check_opcua_type_generator import CheckExecutionEngineTypeGenerator
+from check_data_converter import CheckInternalDataConverter
 class RunExecutionEngineLogicTests(unittest.TestCase):
 
     def run_execution_engine_logic_tests(self, cov = None, custom_type_definitions = None):
@@ -39,10 +41,10 @@ class RunExecutionEngineLogicTests(unittest.TestCase):
             custom_type_definitions = check_type_generator.check_start_simple_server(cov)
             check_execution_list = CheckExecutionList()
             check_execution_list.run_tests(cov)
-            print("check_execution_engine_server")
+            print("check_execution_engine_server  ")
             check_execution_engine_server = CheckExecutionEngineServer()
             check_execution_engine_server.check_start_simple_server(cov)
-            print("check_data_converter", custom_type_definitions)
+            print("check_data_converter")
             check_data_converter = CheckInternalDataConverter()
             custom_type_definitions = check_data_converter.check_start_simple_server(cov, custom_type_definitions)
         cov.report()

@@ -9,8 +9,12 @@ name: Measure code coverage
 on:
   push:
     branches: [ main ]
+
   pull_request:
     branches: [ main ]
+
+permissions:
+  contents: read
 
 jobs:
   code-coverage:
@@ -30,6 +34,8 @@ jobs:
 
         - name: Run Coverage.py
           run: |
-            coverage run tests/unit_tests/run_unit_tests.py --omit=tests/* 
+            PYTHONPATH=.
+            coverage run tests/unit_tests/run_unit_tests.py --omit=tests/*
             coverage report
+            coverage json
             coverage html

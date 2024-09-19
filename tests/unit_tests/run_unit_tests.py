@@ -4,7 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 import sys
-sys.path.append("../")
+sys.path.append("../../")
 import coverage, unittest
 from check_control_interface.run_unit_tests import RunControlInterfaceTests
 from check_execution_engine_logic.run_unit_tests import RunExecutionEngineLogicTests
@@ -14,6 +14,7 @@ from check_dispatcher.run_unit_tests import RunDispatcherTests
 class ExecuteUnitTests(unittest.TestCase):
 
     def test_run_tests(self):
+
         print("run unit tests")
         cov = coverage.Coverage(cover_pylib=False,
                                 omit=[
@@ -42,6 +43,7 @@ class ExecuteUnitTests(unittest.TestCase):
                                       "..\\test_helpers\\values\\ee_structures.py",
                                       "..\\test_helpers\\values\\service_parameters.py",
                                       ])
+
         with cov.collect():
             custom_type_definitions = RunExecutionEngineLogicTests().run_execution_engine_logic_tests(cov)
             custom_type_definitions = RunControlInterfaceTests().run_control_interface_tests(cov, custom_type_definitions)
