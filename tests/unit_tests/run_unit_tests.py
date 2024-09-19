@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-
+import sys
+sys.path.append("../")
 import coverage, unittest
 from tests.unit_tests.check_control_interface.run_unit_tests import RunControlInterfaceTests
 from tests.unit_tests.check_execution_engine_logic.run_unit_tests import RunExecutionEngineLogicTests
