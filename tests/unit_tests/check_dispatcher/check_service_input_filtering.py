@@ -5,9 +5,9 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import asyncio, unittest
-from control_interface.execute_service.assign_agent import AssignAgent
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
-from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
+from execute_service.assign_agent import AssignAgent
+from data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
+from dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
 from values.ee_structures import DemoScenarioStructureValues
 from util.start_docker_compose import DockerComposeEnvironment
 from util.execution_engine_server import Helper

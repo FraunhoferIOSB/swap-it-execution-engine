@@ -7,10 +7,10 @@
 import unittest, asyncio, time, uuid
 from asyncua import Client
 from util.start_docker_compose import DockerComposeEnvironment
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.execute_service.default_assignment_agent import DefaultAssignmentAgent
-from control_interface.execute_service.assign_agent import AssignAgent
-from control_interface.clients.queue_interaction import TargetServerQueue
+from target_server.target_server_dict import TargetServerList
+from execute_service.default_assignment_agent import DefaultAssignmentAgent
+from execute_service.assign_agent import AssignAgent
+from clients.queue_interaction import TargetServerQueue
 
 class CheckAssignmentAgent(unittest.TestCase):
     #assign to single resource

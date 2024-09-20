@@ -6,15 +6,15 @@
 
 import unittest, asyncio, uuid
 from collections import OrderedDict
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
-from control_interface.control_interface import ControlInterface
-from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
+from data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
+from dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
 from values.ee_structures import DemoScenarioStructureValues
 from util.start_docker_compose import DockerComposeEnvironment
 from util.server_explorer import CheckServerNamespace
 from util.execution_engine_server import Helper
 from util.observer_client import ObserverClient
-from control_interface.target_server.target_server_dict import TargetServerList
+from target_server.target_server_dict import TargetServerList
+from control_interface_highlevel import ControlInterface
 
 class CheckServiceStartedDispatcherCallback(unittest.TestCase):
 

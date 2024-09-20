@@ -6,8 +6,8 @@
 
 import asyncio, threading
 from asyncua import Client
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.clients.event_subscription import ServiceEvents, SubHandler
+from target_server.target_server_dict import TargetServerList
+from clients.event_subscription import ServiceEvents, SubHandler
 
 class ObserverClient:
 

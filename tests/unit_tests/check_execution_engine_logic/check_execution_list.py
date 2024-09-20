@@ -5,7 +5,7 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import unittest
-from execution_engine_logic.service_execution.execution_dict import ServiceInfo, ExecutionList
+from service_execution.execution_dict import ServiceInfo, ExecutionList
 
 class CheckExecutionList(unittest.TestCase):
 

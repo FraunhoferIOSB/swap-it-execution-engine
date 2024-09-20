@@ -5,10 +5,10 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import unittest
-from execution_engine_logic.execution_engine_server import ExecutionEngineServer
-from execution_engine_logic.data_object.data_object_interaction import DataObject
+from data_types.internal_data_converter import EngineOpcUaDataConverter
+from execution_engine_server import ExecutionEngineServer
+from data_object.data_object_interaction import DataObject
 from values.ee_structures import DemoScenarioStructureTypes
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class Helper(unittest.TestCase):
 

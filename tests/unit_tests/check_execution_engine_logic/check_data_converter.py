@@ -6,10 +6,10 @@
 
 import unittest, asyncio
 from values.ee_structures import DemoScenarioStructureValues, DemoScenarioStructureTypes
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
-from execution_engine_logic.execution_engine_server import ExecutionEngineServer
-from execution_engine_logic.data_object.data_object_interaction import DataObject
-from execution_engine_logic.data_types.types import EngineArray, EngineStruct
+from data_types.types import EngineArray, EngineStruct
+from data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
+from execution_engine_server import ExecutionEngineServer
+from data_object.data_object_interaction import DataObject
 class CheckInternalDataConverter(unittest.TestCase):
 
     async def check_internal_data_transformer(self, custom_type_definitions= None):

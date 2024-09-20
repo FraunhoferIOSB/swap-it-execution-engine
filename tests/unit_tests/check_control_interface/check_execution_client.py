@@ -3,16 +3,16 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-from control_interface.clients.execution_client import ExecutionClient
+
 import unittest, asyncio, time
 from util.start_docker_compose import DockerComposeEnvironment
 from values.ee_structures import DemoScenarioStructureValues, DemoScenarioStructureTypes
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
-from execution_engine_logic.execution_engine_server import ExecutionEngineServer
-from execution_engine_logic.data_object.data_object_interaction import DataObject
-from control_interface.control_interface import ControlInterface
-from execution_engine_logic.service_execution.execution_dict import ServiceInfo, ExecutionList
-from control_interface.target_server.target_server_dict import TargetServerList
+from data_types.internal_data_converter import EngineOpcUaDataConverter
+from execution_engine_server import ExecutionEngineServer
+from data_object.data_object_interaction import DataObject
+from service_execution.execution_dict import ExecutionList
+from control_interface_highlevel import ControlInterface
+from target_server.target_server_dict import TargetServerList
 
 ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
 

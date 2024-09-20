@@ -7,8 +7,8 @@
 import unittest, asyncio, time, uuid
 from util.start_docker_compose import DockerComposeEnvironment
 from values.service_parameters import ServiceParameter
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.clients.queue_interaction import TargetServerQueue
+from target_server.target_server_dict import TargetServerList
+from clients.queue_interaction import TargetServerQueue
 from asyncua import Client
 
 

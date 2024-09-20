@@ -6,11 +6,11 @@
 
 
 import asyncio, unittest, time
-from asyncua import Client, ua
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.execute_service.check_service_in_and_output import CheckServiceMethodArguments
-from control_interface.execute_service.interprete_result import ServiceResults
-from control_interface.clients.event_subscription import ServiceEvents, SubHandler
+from asyncua import Client
+from target_server.target_server_dict import TargetServerList
+from execute_service.check_service_in_and_output import CheckServiceMethodArguments
+from execute_service.interprete_result import ServiceResults
+from clients.event_subscription import ServiceEvents, SubHandler
 from util.start_docker_compose import DockerComposeEnvironment
 from values.service_parameters import ServiceParameter
 

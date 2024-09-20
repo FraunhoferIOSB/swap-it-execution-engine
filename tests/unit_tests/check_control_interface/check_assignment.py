@@ -8,11 +8,11 @@ import unittest, asyncio, time
 from asyncua import Client
 from util.start_docker_compose import DockerComposeEnvironment
 from values.ee_structures import DemoScenarioStructureTypes
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.execute_service.assign_agent import AssignAgent
-from execution_engine_logic.execution_engine_server import ExecutionEngineServer
-from execution_engine_logic.data_object.data_object_interaction import DataObject
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
+from target_server.target_server_dict import TargetServerList
+from execute_service.assign_agent import AssignAgent
+from execution_engine_server import ExecutionEngineServer
+from data_object.data_object_interaction import DataObject
+from data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class CheckAssignment(unittest.TestCase):
 

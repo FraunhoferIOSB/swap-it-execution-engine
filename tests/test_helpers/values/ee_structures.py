@@ -4,7 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-from execution_engine_logic.data_types.types import EngineArray, EngineStruct
+from data_types.types import EngineArray, EngineStruct
 
 class DemoScenarioStructureTypes:
 

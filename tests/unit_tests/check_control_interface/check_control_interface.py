@@ -6,7 +6,6 @@
 import unittest, asyncio, time
 from util.start_docker_compose import DockerComposeEnvironment
 
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
 
 class CheckControlInterface(unittest.TestCase):
 

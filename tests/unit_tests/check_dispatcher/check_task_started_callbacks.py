@@ -6,8 +6,8 @@
 
 import unittest, asyncio, uuid
 from collections import OrderedDict
-from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
-from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
+from data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
+from dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
 from values.ee_structures import DemoScenarioStructureValues
 from util.start_docker_compose import DockerComposeEnvironment
 from util.server_explorer import CheckServerNamespace

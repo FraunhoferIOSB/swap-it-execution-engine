@@ -6,8 +6,8 @@
 
 from util.start_docker_compose import DockerComposeEnvironment
 from asyncua import Client
-from control_interface.target_server.target_server_dict import TargetServerList
-from control_interface.execute_service.check_service_in_and_output import CheckServiceMethodArguments
+from target_server.target_server_dict import TargetServerList
+from execute_service.check_service_in_and_output import CheckServiceMethodArguments
 import asyncio, unittest, time
 
 class CheckServerBrowsing(unittest.TestCase):
