@@ -73,8 +73,8 @@ class DispatcherCallbackFunctions:
         names, values = await self.callback_helpers.read_struct_value_from_data_object(*self.callback_helpers.classify_service_input(input_parameters), context)
         o_parameters = self.callback_helpers.read_service_output_parameter(output_parameters)
         tar_server_url = self.callback_helpers.check_for_target_type(self.server, values, "ResourceAssignment")
-        assignment_agent_url = self.callback_helpers.check_for_assignment_agent(self.server, values)
-        device_registry_url = self.callback_helpers.check_for_registry(self.server, values)
+        assignment_agent_url = self.callback_helpers.check_for_target_type(self.server, values, "AssignmentAgent")
+        device_registry_url = self.callback_helpers.check_for_target_type(self.server, values, "DeviceRegistry")
         self.control_interface.start_client_interaction(name, str(tar_server_url), [names, values], context, service_uuid, o_parameters, assignment_agent_url, device_registry_url)
 
     async def service_finished_cb(self, name, service_identifier, context = None):

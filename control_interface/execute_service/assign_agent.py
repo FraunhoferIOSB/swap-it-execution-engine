@@ -23,8 +23,8 @@ class AssignAgent:
                 return agent_list
         if(assignment_agent_url == None):
             resource = await DefaultAssignmentAgent(device_registry_url, agent_list).find_target_resource()
-            if self.docker == True:
-                resource = self.convert_url_from_docker(resource)
+            if self.docker != None:
+                resource = self.convert_to_custom_url(resource, self.docker)
             return resource
         else:
         #external assignment agend
@@ -34,9 +34,9 @@ class AssignAgent:
                 await client.disconnect()
             return agent
 
-    def convert_url_from_docker(self, resource):
+    def convert_to_custom_url(self, resource, custom_url):
         resource = resource.split(":")
-        return "opc.tcp://localhost:" + str(resource[len(resource) - 1])
+        return str(custom_url) + str(resource[len(resource) - 1])
     async def create_filter_agent_input_arguments(self, inp_args, service_browse_name, custom_data_types):
         capability_struct = self.get_capability_struct(str(service_browse_name) + "_Capabilities", custom_data_types)
         if capability_struct != None:

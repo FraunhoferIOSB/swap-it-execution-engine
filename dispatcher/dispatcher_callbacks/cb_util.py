@@ -92,25 +92,4 @@ class CallbackHelpers:
                     return value
         return None
 
-    def check_for_assignment_agent(self, server, input_parameter):
-        res = None
-        for i in range(len(server.custom_data_types["Name"])):
-            if str(server.custom_data_types["Name"][i]) == "AssignmentAgent":
-                res = server.custom_data_types["Class"][i]()
-        for i in range(len(input_parameter)):
-            if isinstance(input_parameter[i], type(res)):
-                for key, value in input_parameter[i].__dict__.items():
-                    return value
-        return None
-
-    def check_for_registry(self, server, input_parameter):
-        res = None
-        for i in range(len(server.custom_data_types["Name"])):
-            if str(server.custom_data_types["Name"][i]) == "DeviceRegistry":
-                res = server.custom_data_types["Class"][i]()
-        for i in range(len(input_parameter)):
-            if isinstance(input_parameter[i], type(res)):
-                for key, value in input_parameter[i].__dict__.items():
-                    return value
-        return None
 

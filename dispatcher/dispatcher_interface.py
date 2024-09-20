@@ -18,12 +18,6 @@ class DispatcherInterface:
         self.server = None
         self.ee_opc_ua_converter = EngineOpcUaDataConverter()
         self.opc_ua_ee_converter = OpcUaEngineDataConverter()
-        self.fire_event = None
-        self.task_started_interface = None
-        self.task_finished_interface = None
-        self.service_finished_interface = None
-        self.service_started_interface = None
-        self.data_provider_interface = None
         self.register_dispatcher_callbacks = None
         self.start_dispatcher = None
         self.running = None
@@ -42,13 +36,6 @@ class DispatcherInterface:
 
     def set_process_parameter(self, structs):
         self.structs = structs
-
-    def set_interfaces(self, task_started, task_finished, service_finished, service_started, data_provider):
-        self.task_started_interface = task_started
-        self.task_finished_interface = task_finished
-        self.service_finished_interface = service_finished
-        self.service_started_interface = service_started
-        self.data_provider_interface = data_provider
 
     def set_fire_event_method(self, fire_event_method):
         self.fire_event = fire_event_method

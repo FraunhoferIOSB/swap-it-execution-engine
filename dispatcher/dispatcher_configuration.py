@@ -17,24 +17,22 @@ class DispatcherConfig:
 
     def __init__(self, filepath, dashboard_host_address = None):
         self.dispatcher_object = DispatcherInterface()
-        self.scheduler = None
         self.filepath = filepath
         self.dashboard_host_address = dashboard_host_address
+        self.scheduler = Scheduler(self.filepath,dashboard_host_address=self.dashboard_host_address) if self.dashboard_host_address else Scheduler(self.filepath)
         self.structs = []
         self.config_dispatcher()
 
     def config_dispatcher(self):
-        self.scheduler = Scheduler(self.filepath, dashboard_host_address=self.dashboard_host_address) if self.dashboard_host_address else Scheduler(self.filepath)
         self.dispatcher_object.set_dispatcher(self.scheduler)
         for key,value in self.scheduler.process.structs.items():
             self.structs.append(PfdlEeDataconverter().create_ee_format(value))
         self.dispatcher_object.set_process_parameter(self.structs)
-        self.dispatcher_object.set_fire_event_method(self.fire_dispatcher_event)
-        self.dispatcher_object.set_interfaces(self.task_started_interface, self.task_finished_interface, self.service_finished_interface,
-                                         self.service_started_interface, self.data_provider_interface)
-        self.dispatcher_object.set_register_dispatcher_callbacks(self.register_dispatcher_callbacks)
         self.dispatcher_object.set_start_dispatcher(self.dispatcher_object.dispatcher.start)
         self.dispatcher_object.set_running(self.return_running)
+        self.dispatcher_object.set_register_dispatcher_callbacks(self.register_dispatcher_callbacks)
+        self.dispatcher_object.set_fire_event_method(self.fire_dispatcher_event)
+
 
     def return_running(self, dispatcher):
         return dispatcher.running
@@ -73,8 +71,6 @@ class DispatcherConfig:
     def data_provider_interface(self, variable_name, task_id):
         variable_name, struct = self.dispatcher_object.provide_parameter_wrapper(variable_name, task_id.uuid)
         return EePfdlConverter().convert_ee_to_pfdl(variable_name, struct)
-
-
 
     def map_input_parameters_to_EE(self, input_parameter_values):
         input_parameters = []
