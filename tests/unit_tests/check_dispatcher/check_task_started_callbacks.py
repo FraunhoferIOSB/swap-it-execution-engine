@@ -60,7 +60,7 @@ class CheckTaskStartedDispatcherCallback(unittest.TestCase):
             helper.examine_browsing_results(task_variable_names, server_namespace.variables)
             await server.stop()
         env.stop_docker_compose()
-        await asyncio.sleep(5)
+        await asyncio.sleep(10)
         return custom_server_types
 
     def check_task_started_callbacks_test(self, custom_data_types = None):

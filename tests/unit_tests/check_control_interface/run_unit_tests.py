@@ -32,7 +32,7 @@ class RunControlInterfaceTests(unittest.TestCase):
         check_default_assignment_agent = CheckAssignmentAgent()
         check_default_assignment_agent.run_check_static_assignment()
         check_default_assignment_agent.run_check_dynamic_assignment()
-        print("check_assignment")
+        print("check_assignment", cusdtom_data_types)
         check_assignment = CheckAssignment()
         check_assignment.check_assignment(cusdtom_data_types)
         return cusdtom_data_types

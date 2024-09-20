@@ -51,7 +51,7 @@ class CheckServiceStartedInputFiltering(unittest.TestCase):
             self.assertEqual(cb.callback_helpers.check_for_target_type(server_instance, input_parameter, "DeviceRegistry"), "opc.tcp://device_registry:8000")
             await server.stop()
         env.stop_docker_compose()
-        await asyncio.sleep(5)
+        await asyncio.sleep(10)
         return custom_server_types
 
     def run_test(self, custom_data_types = None):

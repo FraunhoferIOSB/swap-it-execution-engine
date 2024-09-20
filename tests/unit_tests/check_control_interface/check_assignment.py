@@ -5,14 +5,13 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import unittest, asyncio, time
-from asyncua import Client
-from util.start_docker_compose import DockerComposeEnvironment
-from values.ee_structures import DemoScenarioStructureTypes
 from target_server.target_server_dict import TargetServerList
 from execute_service.assign_agent import AssignAgent
 from execution_engine_server import ExecutionEngineServer
 from data_object.data_object_interaction import DataObject
 from data_types.internal_data_converter import EngineOpcUaDataConverter
+from util.start_docker_compose import DockerComposeEnvironment
+from values.ee_structures import DemoScenarioStructureTypes
 
 class CheckAssignment(unittest.TestCase):
 
@@ -35,36 +34,32 @@ class CheckAssignment(unittest.TestCase):
         capa, _ = self.create_structures(custom_data_types, "ResourceAssignment",
                                {"job_resource":"opc.tcp://service_server:4081"},
                                "Milling_Capabilities", {"test_numeric": 5, "test_boolean": False})
-
-        # start client, connect to server and explore the server's namespace
-        async with Client(url=server_url) as client:
-            target_server_list = TargetServerList(None, iteration_time)
-            target_server = await target_server_list.get_target_server(server_url, service_browse_name)
-            #create the assignment class
-            assign_agent = AssignAgent(None)
-            #assign without existing target resource
-            target_agent = await assign_agent.allocate_job_to_agent("Get", [[],[]], "opc.tcp://localhost:8000", None, custom_data_types)
-            self.assertEqual(target_agent, None)
-            # assign without capabilities
-            target_agent = await assign_agent.allocate_job_to_agent("Milling", [[], []], "opc.tcp://localhost:8000", None,
-                                                                    custom_data_types)
-            self.assertEqual(target_agent, "opc.tcp://service_server:4071")
-            #assign with capabilities
-            target_agent = await assign_agent.allocate_job_to_agent("Milling", [["Literal"], [capa]], "opc.tcp://localhost:8000",
-                                                                    None,
-                                                                    custom_data_types)
-            self.assertEqual(target_agent, "opc.tcp://service_server:4071")
+        target_server_list = TargetServerList(None, iteration_time)
+        target_server = await target_server_list.get_target_server(server_url, service_browse_name)
+        #create the assignment class
+        assign_agent = AssignAgent(None)
+        #assign without existing target resource
+        target_agent = await assign_agent.allocate_job_to_agent("Get", [[],[]], "opc.tcp://localhost:8000", None, custom_data_types)
+        self.assertEqual(target_agent, None)
+        # assign without capabilities
+        target_agent = await assign_agent.allocate_job_to_agent("Milling", [[], []], "opc.tcp://localhost:8000", None,custom_data_types)
+        self.assertEqual(target_agent, "opc.tcp://service_server:4071")
+        #assign with capabilities
+        target_agent = await assign_agent.allocate_job_to_agent("Milling", [["Literal"], [capa]], "opc.tcp://localhost:8000",None, custom_data_types)
+        self.assertEqual(target_agent, "opc.tcp://service_server:4071")
             #todo assign with external agent
             #todo assign with capability from dlo
         env.stop_docker_compose()
+        await asyncio.sleep(10)
 
     def create_structures(self, custom_types, assignment_structure, assign_kwargs, capability_structure, capa_kwargs):
+        assign, capa = None, None
         for i in range(len(custom_types["Name"])):
-            if custom_types["Name"][i] == assignment_structure:
-                self.assignment_structure_opcua = custom_types["Class"][i](assign_kwargs)
-            if custom_types["Name"][i] == capability_structure:
-                self.capability_structure_opcua = custom_types["Class"][i](capa_kwargs)
-        return self.assignment_structure_opcua, self.capability_structure_opcua
+            if str(custom_types["Name"][i]) == str(assignment_structure):
+                assign = custom_types["Class"][i](assign_kwargs)
+            if str(custom_types["Name"][i]) == str(capability_structure):
+                 capa = custom_types["Class"][i](capa_kwargs)
+            return assign, capa
 
     def check_assignment(self, custom_data_types):
         loop = asyncio.get_event_loop()

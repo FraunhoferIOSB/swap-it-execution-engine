@@ -14,7 +14,6 @@ from service_execution.execution_dict import ExecutionList
 from control_interface_highlevel import ControlInterface
 from target_server.target_server_dict import TargetServerList
 
-ignore_files = "C:\Program Files\JetBrains\PyCharm 2024.1.3\plugins\python\helpers\pycharm\\"
 
 class CheckExecutionClient(unittest.TestCase):
 
@@ -45,6 +44,7 @@ class CheckExecutionClient(unittest.TestCase):
 
         # start new client since there are no in the execution list
         env.stop_docker_compose()
+        await asyncio.sleep(10)
         return custom_data_types
 
 

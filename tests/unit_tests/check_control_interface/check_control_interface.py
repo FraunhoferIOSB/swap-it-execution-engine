@@ -18,6 +18,7 @@ class CheckControlInterface(unittest.TestCase):
         server_url = "opc.tcp://localhost:4081"
         iteration_time = 0.001
         env.stop_docker_compose()
+        await asyncio.sleep(10)
 
     def test_check_assignment(self):
         loop = asyncio.get_event_loop()

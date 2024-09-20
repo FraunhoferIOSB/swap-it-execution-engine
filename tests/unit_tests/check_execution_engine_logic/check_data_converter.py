@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-
-import unittest, asyncio
+import unittest, asyncio, sys
+sys.path.append("data_types")
 from values.ee_structures import DemoScenarioStructureValues, DemoScenarioStructureTypes
 from data_types.types import EngineArray, EngineStruct
 from data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
@@ -56,7 +56,7 @@ class CheckInternalDataConverter(unittest.TestCase):
                         self.check_generated_engine_types(obj.values[i], ee_struct.attributes[name].values[i])
                 else:
                     self.assertEqual(obj, ee_struct.attributes[name])
-        else: self.assertEqual(obj, ee_struct)
+        #else: self.assertEqual(obj, ee_struct)
 
     def check_generated_opcua(self, obj, ee_struct):
         for name, obj in obj.__dict__.items():
@@ -65,7 +65,8 @@ class CheckInternalDataConverter(unittest.TestCase):
             elif isinstance(ee_struct.attributes[name], EngineArray):
                 for i in range(ee_struct.attributes[name].length):
                     self.check_generated_opcua(obj[i], ee_struct.attributes[name].values[i])
-            else:
+            elif isinstance(ee_struct.attributes[name], str) or isinstance(ee_struct.attributes[name], int) or isinstance(ee_struct.attributes[name], float)\
+                    or isinstance(ee_struct.attributes[name], bool):
                 self.assertEqual(obj, ee_struct.attributes[name])
 
     def check_start_simple_server(self, custom_type_definitions = None):

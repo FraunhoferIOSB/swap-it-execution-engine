@@ -73,6 +73,7 @@ class CheckAssignmentAgent(unittest.TestCase):
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
         self.assertEqual(str(a_agent.convert_to_custom_url(target_agent, "opc.tcp://localhost:")), target_server_list[1])
         env.stop_docker_compose()
+        await asyncio.sleep(10)
 
     def run_check_static_assignment(self):
         loop = asyncio.get_event_loop()

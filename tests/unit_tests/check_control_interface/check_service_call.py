@@ -56,7 +56,8 @@ class CheckServiceCall(unittest.TestCase):
             #self.assertEqual(service_res.result["AsyncReturn"][0].segments, param.service_results["AsyncReturn"][0].segments)
             #self.assertEqual(service_res.result["AsyncReturn"][0].number_light_segments, param.service_results["AsyncReturn"][0].number_light_segments)
             await client.disconnect()
-            env.stop_docker_compose()
+        env.stop_docker_compose()
+        await asyncio.sleep(10)
 
     def run_check_service_call_from_data_object(self):
         #todo

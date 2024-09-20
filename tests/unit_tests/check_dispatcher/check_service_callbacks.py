@@ -69,7 +69,7 @@ class CheckServiceStartedDispatcherCallback(unittest.TestCase):
             self.assertEqual(cb.control_interface.service_execution_list.services[0].service_name, "Milling")
             await server.stop()
         env.stop_docker_compose()
-        await asyncio.sleep(5)
+        await asyncio.sleep(10)
         return custom_server_types
 
     async def check_service_callback_with_ordinary_task(self, custom_server_types = None):

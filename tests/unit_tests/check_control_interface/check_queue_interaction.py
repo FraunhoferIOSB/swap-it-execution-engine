@@ -54,6 +54,7 @@ class QueueInteraction(unittest.TestCase):
             queue_type = param.get_custom_type("Queue_Data_Type")(Client_Identifier=None, Service_UUID=None, Entry_Number=param.get_custom_type("Queue_State_Variable_Type")(0), Queue_Element_State=0, ProductId=None, ServiceParameter=None)
             self.assertEqual(value, queue_type)
         env.stop_docker_compose()
+        await asyncio.sleep(10)
 
     def run_queue_interaction(self):
         loop = asyncio.get_event_loop()

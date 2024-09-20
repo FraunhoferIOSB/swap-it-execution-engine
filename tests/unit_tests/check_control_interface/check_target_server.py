@@ -46,6 +46,7 @@ class CheckServerBrowsing(unittest.TestCase):
             #self.assertListEqual(target_server.Output_Arguments["AsyncArguments"][0], ["order", "SWAP_Order"])
             await client.disconnect()
         env.stop_docker_compose()
+        await asyncio.sleep(10)
     async def check_method_arguments(self, target_server, client):
         target_server.Input_Arguments, target_server.Output_Arguments = await CheckServiceMethodArguments().browse_method_arguments(
             target_server.service_node, client, *await target_server.browse_result_data_type_nodes(client),
@@ -60,6 +61,5 @@ class CheckServerBrowsing(unittest.TestCase):
     def run_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.check_server_browsing())
-        return custom_data_types
 
 

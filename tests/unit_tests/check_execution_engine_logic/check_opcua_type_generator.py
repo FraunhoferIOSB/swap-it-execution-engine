@@ -40,6 +40,7 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
                     d_type_bn = await server.get_node(self.return_nodeId_infor(nodeIds, td.Fields[j].DataType)).read_browse_name()
                     self.assertEqual(str(d_type_bn.Name), str(curr_type[j].dataType))
             await server_instance.stop_server()
+        print("custom types to be returned", server_instance.custom_data_types)
         return server_instance.custom_data_types
     def return_nodeId_infor(self, node_list, target_id):
         for i in range(len(node_list)):
@@ -49,8 +50,7 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
 
     def check_start_simple_server(self):
         loop = asyncio.get_event_loop()
-        types = loop.run_until_complete(self.generate_opcua_types())
-        return types
+        return loop.run_until_complete(self.generate_opcua_types())
 
 
 
