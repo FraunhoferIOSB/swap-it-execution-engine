@@ -44,7 +44,6 @@ class ExecutionEngineServer:
         return self.server
 
     async def stop_server(self):
-        #self.custom_data_types = None
         await self.server.stop()
 
 
