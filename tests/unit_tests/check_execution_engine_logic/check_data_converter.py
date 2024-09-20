@@ -5,16 +5,14 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import unittest, asyncio
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureValues, DemoScenarioStructureTypes
+from values.ee_structures import DemoScenarioStructureValues, DemoScenarioStructureTypes
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.types import EngineArray, EngineStruct
-
 class CheckInternalDataConverter(unittest.TestCase):
 
-    async def check_internal_data_transformer(self, cov, custom_type_definitions):
-        cov.start()
+    async def check_internal_data_transformer(self, custom_type_definitions= None):
         iteration_time = 0.001
         server_url = "opc.tcp://localhost:4002"
         server_instance = ExecutionEngineServer(execution_engine_server_url=server_url, log_info=True,
@@ -44,9 +42,7 @@ class CheckInternalDataConverter(unittest.TestCase):
                 self.check_generated_engine_types(obj, value)
                 ctr += 1
             await server_instance.stop_server()
-        cov.stop()
         return custom_type_definitions
-
 
     def check_generated_engine_types(self, obj, ee_struct):
         #self.assertEqual(obj.data_type, ee_struct.data_type)
@@ -72,6 +68,6 @@ class CheckInternalDataConverter(unittest.TestCase):
             else:
                 self.assertEqual(obj, ee_struct.attributes[name])
 
-    def check_start_simple_server(self, cov, custom_type_definitions):
+    def check_start_simple_server(self, custom_type_definitions = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_internal_data_transformer(cov, custom_type_definitions))
+        return loop.run_until_complete(self.check_internal_data_transformer(custom_type_definitions))

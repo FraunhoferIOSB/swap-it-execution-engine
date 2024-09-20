@@ -4,20 +4,19 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import unittest, coverage, asyncio, uuid
+import unittest, asyncio, uuid
 from collections import OrderedDict
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
 from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureValues
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.util.server_explorer import CheckServerNamespace
-from tests.test_helpers.util.execution_engine_server import Helper
-from tests.unit_tests.check_execution_engine_logic.check_data_converter import CheckInternalDataConverter
+from values.ee_structures import DemoScenarioStructureValues
+from util.start_docker_compose import DockerComposeEnvironment
+from util.server_explorer import CheckServerNamespace
+from util.execution_engine_server import Helper
+from check_execution_engine_logic.check_data_converter import CheckInternalDataConverter
 from asyncua import ua
 
 class CheckDataDispatcherCallback(unittest.TestCase):
-    async def check_data_callback(self, cov = None, custom_server_types = None):
-        cov.start()
+    async def check_data_callback(self, custom_server_types = None):
         env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
         env.run_docker_compose()
         await asyncio.sleep(10)
@@ -77,12 +76,12 @@ class CheckDataDispatcherCallback(unittest.TestCase):
             check_converter.check_generated_engine_types(await cb.provide_parameter("test", task1_uuid), target_val)
             await server.stop()
         env.stop_docker_compose()
-        cov.stop()
+        await asyncio.sleep(5)
         return custom_server_types
 
-    def check_data_callbacks_test(self, cov=coverage.Coverage(), custom_data_types = None):
+    def check_data_callbacks_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_data_callback(cov = cov, custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_data_callback(custom_server_types = custom_data_types))
 
 
 

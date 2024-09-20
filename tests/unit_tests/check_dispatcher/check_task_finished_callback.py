@@ -4,20 +4,18 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import unittest, coverage, asyncio, uuid
+import unittest, asyncio, uuid
 from collections import OrderedDict
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
 from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureValues
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.util.server_explorer import CheckServerNamespace
-from tests.test_helpers.util.execution_engine_server import Helper
-from asyncua import Client, ua
+from values.ee_structures import DemoScenarioStructureValues
+from util.start_docker_compose import DockerComposeEnvironment
+from util.server_explorer import CheckServerNamespace
+from util.execution_engine_server import Helper
+from asyncua import ua
 
 class CheckTaskFinishedDispatcherCallback(unittest.TestCase):
-    async def check_task_finished_callback(self, cov = None, custom_server_types = None):
-        print("custom_types", custom_server_types)
-        cov.start()
+    async def check_task_finished_callback(self, custom_server_types = None):
         env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
         env.run_docker_compose()
         await asyncio.sleep(10)
@@ -31,7 +29,6 @@ class CheckTaskFinishedDispatcherCallback(unittest.TestCase):
             custom_server_types = custom_data
         else:
             server_instance.custom_data_types = custom_server_types
-        print("custom_types", custom_server_types)
         async with server:
             cb = DispatcherCallbackFunctions(server, server_instance, EngineOpcUaDataConverter(),
                                              OpcUaEngineDataConverter())
@@ -63,7 +60,6 @@ class CheckTaskFinishedDispatcherCallback(unittest.TestCase):
                 node = await server_namespace.find_node_by_browsename(server.get_node(
                     ua.NodeId(Identifier=uuid.UUID(task3_uuid), NamespaceIndex=2, NodeIdType=ua.NodeIdType.Guid)), value_check[i])
                 self.assertEqual(value_check_resuls[i], await server.get_node(node).read_value())
-            print("server_namespace.variables", server_namespace.variables)
             # remove task 3 without parameters
             await cb.task_finished_cb("task3", task3_uuid, task2_uuid, [])
             #remove task 2 (with parameters handed over to task_1)
@@ -85,12 +81,12 @@ class CheckTaskFinishedDispatcherCallback(unittest.TestCase):
             await cb.task_finished_cb("productionTask", production_task_uuid, production_task_uuid, [])
             await server.stop()
         env.stop_docker_compose()
-        cov.stop()
+        await asyncio.sleep(5)
         return custom_server_types
 
-    def check_task_finished_callbacks_test(self, cov=coverage.Coverage(), custom_data_types = None):
+    def check_task_finished_callbacks_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_task_finished_callback(cov = cov, custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_task_finished_callback(custom_server_types = custom_data_types))
 
 
 

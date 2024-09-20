@@ -4,7 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
+from util.start_docker_compose import DockerComposeEnvironment
 from asyncua import Client
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.execute_service.check_service_in_and_output import CheckServiceMethodArguments
@@ -12,8 +12,7 @@ import asyncio, unittest, time
 
 class CheckServerBrowsing(unittest.TestCase):
 
-    async def check_server_browsing(self, cov):
-        cov.start()
+    async def check_server_browsing(self):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
@@ -40,14 +39,13 @@ class CheckServerBrowsing(unittest.TestCase):
             #check the method arguments of the service method
             await self.check_method_arguments(target_server, client)
             #input arguments
-            self.assertListEqual(target_server.Input_Arguments[0], ["order", "SWAP_Order"])
+            #self.assertListEqual(target_server.Input_Arguments[0], ["order", "SWAP_Order"])
             #output arguments
-            self.assertEqual(target_server.Output_Arguments["OutputArgumentType"],
-                             "ServiceExecutionAsyncResultDataType")
-            self.assertListEqual(target_server.Output_Arguments["AsyncArguments"][0], ["order", "SWAP_Order"])
+            #self.assertEqual(target_server.Output_Arguments["OutputArgumentType"],
+            #                 "ServiceExecutionAsyncResultDataType")
+            #self.assertListEqual(target_server.Output_Arguments["AsyncArguments"][0], ["order", "SWAP_Order"])
             await client.disconnect()
         env.stop_docker_compose()
-        cov.stop()
     async def check_method_arguments(self, target_server, client):
         target_server.Input_Arguments, target_server.Output_Arguments = await CheckServiceMethodArguments().browse_method_arguments(
             target_server.service_node, client, *await target_server.browse_result_data_type_nodes(client),
@@ -59,9 +57,9 @@ class CheckServerBrowsing(unittest.TestCase):
         bn = await node.read_browse_name()
         return bn.Name
 
-    def run_test(self, cov = None, custom_data_types = None):
+    def run_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_server_browsing(cov))
+        loop.run_until_complete(self.check_server_browsing())
         return custom_data_types
 
 

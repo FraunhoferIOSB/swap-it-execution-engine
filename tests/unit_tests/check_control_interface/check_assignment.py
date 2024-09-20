@@ -4,20 +4,19 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import unittest, coverage, asyncio, time
+import unittest, asyncio, time
 from asyncua import Client
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
+from util.start_docker_compose import DockerComposeEnvironment
+from values.ee_structures import DemoScenarioStructureTypes
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.execute_service.assign_agent import AssignAgent
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureTypes
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class CheckAssignment(unittest.TestCase):
 
-    async def check_static_assignment(self,cov = None, custom_data_types = None):
-        cov.start()
+    async def check_static_assignment(self,custom_data_types = None):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
@@ -46,12 +45,10 @@ class CheckAssignment(unittest.TestCase):
             #assign without existing target resource
             target_agent = await assign_agent.allocate_job_to_agent("Get", [[],[]], "opc.tcp://localhost:8000", None, custom_data_types)
             self.assertEqual(target_agent, None)
-            print("target_agent",target_agent)
             # assign without capabilities
             target_agent = await assign_agent.allocate_job_to_agent("Milling", [[], []], "opc.tcp://localhost:8000", None,
                                                                     custom_data_types)
             self.assertEqual(target_agent, "opc.tcp://service_server:4071")
-            print("target_agent", target_agent)
             #assign with capabilities
             target_agent = await assign_agent.allocate_job_to_agent("Milling", [["Literal"], [capa]], "opc.tcp://localhost:8000",
                                                                     None,
@@ -60,7 +57,6 @@ class CheckAssignment(unittest.TestCase):
             #todo assign with external agent
             #todo assign with capability from dlo
         env.stop_docker_compose()
-        cov.stop()
 
     def create_structures(self, custom_types, assignment_structure, assign_kwargs, capability_structure, capa_kwargs):
         for i in range(len(custom_types["Name"])):
@@ -70,6 +66,6 @@ class CheckAssignment(unittest.TestCase):
                 self.capability_structure_opcua = custom_types["Class"][i](capa_kwargs)
         return self.assignment_structure_opcua, self.capability_structure_opcua
 
-    def check_assignment(self, cov, custom_data_types):
+    def check_assignment(self, custom_data_types):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_static_assignment(cov, custom_data_types))
+        loop.run_until_complete(self.check_static_assignment(custom_data_types))

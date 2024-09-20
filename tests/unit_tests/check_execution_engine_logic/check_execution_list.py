@@ -9,8 +9,7 @@ from execution_engine_logic.service_execution.execution_dict import ServiceInfo,
 
 class CheckExecutionList(unittest.TestCase):
 
-    def run_tests(self, cov):
-        cov.start()
+    def run_tests(self):
         test_val = "test"
         service_list = ExecutionList()
         # add a service
@@ -36,4 +35,3 @@ class CheckExecutionList(unittest.TestCase):
         self.assertEqual(service_name, test_val)
         self.assertEqual(service_uuid, test_val)
         self.assertEqual(task_uuid, test_val)
-        cov.stop()

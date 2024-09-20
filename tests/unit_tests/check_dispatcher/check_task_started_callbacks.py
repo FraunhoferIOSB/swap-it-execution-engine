@@ -4,20 +4,19 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import unittest, coverage, asyncio, uuid
+import unittest, asyncio, uuid
 from collections import OrderedDict
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
 from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureValues
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.util.server_explorer import CheckServerNamespace
-from tests.test_helpers.util.execution_engine_server import Helper
+from values.ee_structures import DemoScenarioStructureValues
+from util.start_docker_compose import DockerComposeEnvironment
+from util.server_explorer import CheckServerNamespace
+from util.execution_engine_server import Helper
 from asyncua import ua
 
 class CheckTaskStartedDispatcherCallback(unittest.TestCase):
 
-    async def check_task_started_callbacks(self, cov = None, custom_server_types = None):
-        cov.start()
+    async def check_task_started_callbacks(self, custom_server_types = None):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         await asyncio.sleep(10)
@@ -61,12 +60,12 @@ class CheckTaskStartedDispatcherCallback(unittest.TestCase):
             helper.examine_browsing_results(task_variable_names, server_namespace.variables)
             await server.stop()
         env.stop_docker_compose()
-        cov.stop()
+        await asyncio.sleep(5)
         return custom_server_types
 
-    def check_task_started_callbacks_test(self, cov=None, custom_data_types = None):
+    def check_task_started_callbacks_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_task_started_callbacks(cov = cov, custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_task_started_callbacks(custom_server_types = custom_data_types))
 
 
 

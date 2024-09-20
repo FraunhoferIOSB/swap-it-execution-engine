@@ -34,8 +34,7 @@ jobs:
 
         - name: Run Coverage.py
           run: |
-            PYTHONPATH=.
-            coverage run tests/unit_tests/run_unit_tests.py --omit=tests/*
+            coverage run --omit=tests/*,__init__.py tests/unit_tests/run_unit_tests.py
             coverage report
             coverage json
             coverage html

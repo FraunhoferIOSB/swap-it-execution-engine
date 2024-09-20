@@ -4,19 +4,17 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import asyncio, coverage, unittest
+import asyncio, unittest
 from control_interface.execute_service.assign_agent import AssignAgent
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter, OpcUaEngineDataConverter
 from dispatcher.dispatcher_callbacks.cb_functions import DispatcherCallbackFunctions
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureValues
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.util.execution_engine_server import Helper
+from values.ee_structures import DemoScenarioStructureValues
+from util.start_docker_compose import DockerComposeEnvironment
+from util.execution_engine_server import Helper
 
 class CheckServiceStartedInputFiltering(unittest.TestCase):
     #todo implement assignment agent filtering
-    async def filter_from_literal_input(self, cov = coverage.Coverage(), custom_server_types = None):
-
-        cov.start()
+    async def filter_from_literal_input(self, custom_server_types = None):
         env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
         env.run_docker_compose()
         await asyncio.sleep(10)
@@ -32,7 +30,6 @@ class CheckServiceStartedInputFiltering(unittest.TestCase):
         else:
             server_instance.custom_data_types = custom_server_types
 
-        print("custom_server_types", custom_server_types)
         async with server:
             converter = EngineOpcUaDataConverter()
             struct_values = DemoScenarioStructureValues()
@@ -54,12 +51,12 @@ class CheckServiceStartedInputFiltering(unittest.TestCase):
             self.assertEqual(cb.callback_helpers.check_for_target_type(server_instance, input_parameter, "DeviceRegistry"), "opc.tcp://device_registry:8000")
             await server.stop()
         env.stop_docker_compose()
-        cov.stop()
+        await asyncio.sleep(5)
         return custom_server_types
 
-    def run_test(self, cov = None, custom_data_types = None):
+    def run_test(self, custom_data_types = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.filter_from_literal_input(cov, custom_data_types))
+        return loop.run_until_complete(self.filter_from_literal_input(custom_data_types))
 
 #if __name__ == "__main__":
 #    unittest.main()

@@ -6,7 +6,7 @@
 
 import unittest, asyncio, time, uuid
 from asyncua import Client
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
+from util.start_docker_compose import DockerComposeEnvironment
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.execute_service.default_assignment_agent import DefaultAssignmentAgent
 from control_interface.execute_service.assign_agent import AssignAgent
@@ -14,8 +14,7 @@ from control_interface.clients.queue_interaction import TargetServerQueue
 
 class CheckAssignmentAgent(unittest.TestCase):
     #assign to single resource
-    async def check_static_assignment(self, cov):
-        cov.start()
+    async def check_static_assignment(self):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
@@ -30,10 +29,8 @@ class CheckAssignmentAgent(unittest.TestCase):
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
         self.assertEqual(str(target_agent), "opc.tcp://service_server:4061")
         env.stop_docker_compose()
-        cov.stop()
     #from multiple resources
-    async def check_dynamic_assignment(self, cov):
-        cov.start()
+    async def check_dynamic_assignment(self):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
@@ -76,15 +73,14 @@ class CheckAssignmentAgent(unittest.TestCase):
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
         self.assertEqual(str(a_agent.convert_to_custom_url(target_agent, "opc.tcp://localhost:")), target_server_list[1])
         env.stop_docker_compose()
-        cov.stop()
 
-    def run_check_static_assignment(self, cov):
+    def run_check_static_assignment(self):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_static_assignment(cov))
+        loop.run_until_complete(self.check_static_assignment())
 
-    def run_check_dynamic_assignment(self, cov):
+    def run_check_dynamic_assignment(self):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_dynamic_assignment(cov))
+        loop.run_until_complete(self.check_dynamic_assignment())
 
 if __name__ == "__main__":
     unittest.main()

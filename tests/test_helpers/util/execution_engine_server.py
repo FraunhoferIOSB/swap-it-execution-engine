@@ -7,7 +7,7 @@
 import unittest
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureTypes
+from values.ee_structures import DemoScenarioStructureTypes
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class Helper(unittest.TestCase):

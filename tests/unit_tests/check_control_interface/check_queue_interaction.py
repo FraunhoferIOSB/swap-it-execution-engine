@@ -5,8 +5,8 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import unittest, asyncio, time, uuid
-from tests.test_helpers.util.start_docker_compose import DockerComposeEnvironment
-from tests.test_helpers.values.service_parameters import ServiceParameter
+from util.start_docker_compose import DockerComposeEnvironment
+from values.service_parameters import ServiceParameter
 from control_interface.target_server.target_server_dict import TargetServerList
 from control_interface.clients.queue_interaction import TargetServerQueue
 from asyncua import Client
@@ -14,8 +14,7 @@ from asyncua import Client
 
 class QueueInteraction(unittest.TestCase):
 
-    async def queue_interaction(self, cov):
-        cov.start()
+    async def queue_interaction(self):
         env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
@@ -55,11 +54,10 @@ class QueueInteraction(unittest.TestCase):
             queue_type = param.get_custom_type("Queue_Data_Type")(Client_Identifier=None, Service_UUID=None, Entry_Number=param.get_custom_type("Queue_State_Variable_Type")(0), Queue_Element_State=0, ProductId=None, ServiceParameter=None)
             self.assertEqual(value, queue_type)
         env.stop_docker_compose()
-        cov.stop()
 
-    def run_queue_interaction(self, cov):
+    def run_queue_interaction(self):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.queue_interaction(cov))
+        loop.run_until_complete(self.queue_interaction())
 
 class Identifier:
 

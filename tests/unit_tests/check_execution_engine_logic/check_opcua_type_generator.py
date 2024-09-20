@@ -6,16 +6,15 @@
 
 import unittest, asyncio
 from asyncua import ua
-from tests.test_helpers.values.ee_structures import DemoScenarioStructureTypes, DemoScenarioOPCUATypeInfo
+from util.server_explorer import CheckServerNamespace
+from values.ee_structures import DemoScenarioStructureTypes, DemoScenarioOPCUATypeInfo
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
-from tests.test_helpers.util.server_explorer import CheckServerNamespace
 
 class CheckExecutionEngineTypeGenerator(unittest.TestCase):
 
-    async def generate_opcua_types(self, cov):
-        cov.start()
+    async def generate_opcua_types(self):
         iteration_time = 0.001
         server_url = "opc.tcp://localhost:4001"
         server_instance = ExecutionEngineServer(execution_engine_server_url = server_url, log_info=True, iteration_time=iteration_time)
@@ -41,7 +40,6 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
                     d_type_bn = await server.get_node(self.return_nodeId_infor(nodeIds, td.Fields[j].DataType)).read_browse_name()
                     self.assertEqual(str(d_type_bn.Name), str(curr_type[j].dataType))
             await server_instance.stop_server()
-        cov.stop()
         return server_instance.custom_data_types
     def return_nodeId_infor(self, node_list, target_id):
         for i in range(len(node_list)):
@@ -49,9 +47,9 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
                 return node_list[i]
         return False
 
-    def check_start_simple_server(self, cov):
+    def check_start_simple_server(self):
         loop = asyncio.get_event_loop()
-        types = loop.run_until_complete(self.generate_opcua_types(cov))
+        types = loop.run_until_complete(self.generate_opcua_types())
         return types
 
 

@@ -8,13 +8,12 @@ import unittest, asyncio, uuid
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
-from tests.test_helpers.util.server_explorer import CheckServerNamespace
+from util.server_explorer import CheckServerNamespace
 from asyncua import ua
 
 class CheckExecutionEngineServer(unittest.TestCase):
 
-    async def start_server_without_types(self, cov):
-        cov.start()
+    async def start_server_without_types(self):
         iteration_time = 0.001
         server_url = "opc.tcp://localhost:4000"
         server_instance = ExecutionEngineServer(execution_engine_server_url = server_url, log_info=True, iteration_time=iteration_time)
@@ -39,7 +38,6 @@ class CheckExecutionEngineServer(unittest.TestCase):
             for i in range(len(object_types_browse_names)):
                 self.assertEqual(self.return_target_node(namespace.objectTypes, object_types_browse_names[i]), object_types_browse_names[i])
         await server_instance.stop_server()
-        cov.stop()
 
     def return_target_node(self, node_list, target_node):
         for i in range(len(node_list)):
@@ -47,8 +45,8 @@ class CheckExecutionEngineServer(unittest.TestCase):
                 return node_list[i]
         return None
 
-    def check_start_simple_server(self, cov):
+    def check_start_simple_server(self):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.start_server_without_types(cov))
+        loop.run_until_complete(self.start_server_without_types())
 
 
