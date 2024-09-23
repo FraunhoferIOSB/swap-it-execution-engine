@@ -4,6 +4,7 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 import sys, os, unittest
+sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../tests/test_helpers/."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../control_interface/."))
