@@ -19,8 +19,7 @@ from control_interface_highlevel import ControlInterface
 class CheckServiceStartedDispatcherCallback(unittest.TestCase):
 
     #no tasks, literal input
-    async def check_service_callback_with_default_task(self, custom_server_types = None):
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+    async def check_service_callback_with_default_task(self, custom_server_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         await asyncio.sleep(10)
         helper = Helper()
@@ -72,8 +71,7 @@ class CheckServiceStartedDispatcherCallback(unittest.TestCase):
         await asyncio.sleep(10)
         return custom_server_types
 
-    async def check_service_callback_with_ordinary_task(self, custom_server_types = None):
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+    async def check_service_callback_with_ordinary_task(self, custom_server_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         await asyncio.sleep(10)
         helper = Helper()
@@ -134,11 +132,11 @@ class CheckServiceStartedDispatcherCallback(unittest.TestCase):
         env.stop_docker_compose()
         return custom_server_types
 
-    def check_service_started_callbacks_test_without_tasks(self, custom_data_types = None):
+    def check_service_started_callbacks_test_without_tasks(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_service_callback_with_default_task(custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_service_callback_with_default_task(custom_server_types = custom_data_types, env = env))
 
-    def check_service_started_callbacks_test_with_tasks(self, custom_data_types = None):
+    def check_service_started_callbacks_test_with_tasks(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_service_callback_with_ordinary_task(custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_service_callback_with_ordinary_task(custom_server_types = custom_data_types, env = env))
 

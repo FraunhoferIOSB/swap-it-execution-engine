@@ -14,8 +14,8 @@ from asyncua import Client
 
 class QueueInteraction(unittest.TestCase):
 
-    async def queue_interaction(self):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def queue_interaction(self, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
+        #env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
@@ -56,9 +56,9 @@ class QueueInteraction(unittest.TestCase):
         env.stop_docker_compose()
         await asyncio.sleep(10)
 
-    def run_queue_interaction(self):
+    def run_queue_interaction(self, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.queue_interaction())
+        loop.run_until_complete(self.queue_interaction(env = env))
 
 class Identifier:
 

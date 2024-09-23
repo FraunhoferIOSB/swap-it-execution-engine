@@ -15,8 +15,7 @@ from values.ee_structures import DemoScenarioStructureTypes
 
 class CheckAssignment(unittest.TestCase):
 
-    async def check_static_assignment(self,custom_data_types = None):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_static_assignment(self,custom_data_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
@@ -61,6 +60,6 @@ class CheckAssignment(unittest.TestCase):
                  capa = custom_types["Class"][i](capa_kwargs)
             return assign, capa
 
-    def check_assignment(self, custom_data_types):
+    def check_assignment(self, custom_data_types, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_static_assignment(custom_data_types))
+        loop.run_until_complete(self.check_static_assignment(custom_data_types, env = env))

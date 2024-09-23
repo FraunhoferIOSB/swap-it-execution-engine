@@ -16,8 +16,7 @@ from check_execution_engine_logic.check_data_converter import CheckInternalDataC
 from asyncua import ua
 
 class CheckDataDispatcherCallback(unittest.TestCase):
-    async def check_data_callback(self, custom_server_types = None):
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+    async def check_data_callback(self, custom_server_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         await asyncio.sleep(10)
         helper = Helper()
@@ -79,9 +78,9 @@ class CheckDataDispatcherCallback(unittest.TestCase):
         await asyncio.sleep(10)
         return custom_server_types
 
-    def check_data_callbacks_test(self, custom_data_types = None):
+    def check_data_callbacks_test(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_data_callback(custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_data_callback(custom_server_types = custom_data_types, env = env))
 
 
 

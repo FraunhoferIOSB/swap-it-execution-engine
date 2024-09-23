@@ -14,8 +14,7 @@ from util.execution_engine_server import Helper
 
 class CheckServiceStartedInputFiltering(unittest.TestCase):
     #todo implement assignment agent filtering
-    async def filter_from_literal_input(self, custom_server_types = None):
-        env = DockerComposeEnvironment(["Service_Server", "Device_Registry"])
+    async def filter_from_literal_input(self, custom_server_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         await asyncio.sleep(10)
         helper = Helper()
@@ -54,9 +53,6 @@ class CheckServiceStartedInputFiltering(unittest.TestCase):
         await asyncio.sleep(10)
         return custom_server_types
 
-    def run_test(self, custom_data_types = None):
+    def run_test(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.filter_from_literal_input(custom_data_types))
-
-#if __name__ == "__main__":
-#    unittest.main()
+        return loop.run_until_complete(self.filter_from_literal_input(custom_data_types, env = env))

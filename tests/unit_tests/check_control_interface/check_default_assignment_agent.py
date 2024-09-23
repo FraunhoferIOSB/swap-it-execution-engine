@@ -14,8 +14,7 @@ from clients.queue_interaction import TargetServerQueue
 
 class CheckAssignmentAgent(unittest.TestCase):
     #assign to single resource
-    async def check_static_assignment(self):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_static_assignment(self, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "Gluing"
@@ -30,8 +29,7 @@ class CheckAssignmentAgent(unittest.TestCase):
         self.assertEqual(str(target_agent), "opc.tcp://service_server:4061")
         env.stop_docker_compose()
     #from multiple resources
-    async def check_dynamic_assignment(self):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_dynamic_assignment(self, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
@@ -75,13 +73,13 @@ class CheckAssignmentAgent(unittest.TestCase):
         env.stop_docker_compose()
         await asyncio.sleep(10)
 
-    def run_check_static_assignment(self):
+    def run_check_static_assignment(self, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_static_assignment())
+        loop.run_until_complete(self.check_static_assignment(env = env))
 
-    def run_check_dynamic_assignment(self):
+    def run_check_dynamic_assignment(self, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_dynamic_assignment())
+        loop.run_until_complete(self.check_dynamic_assignment(env = env))
 
 if __name__ == "__main__":
     unittest.main()

@@ -12,8 +12,8 @@ import asyncio, unittest, time
 
 class CheckServerBrowsing(unittest.TestCase):
 
-    async def check_server_browsing(self):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_server_browsing(self, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
+        #env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
 
@@ -58,8 +58,8 @@ class CheckServerBrowsing(unittest.TestCase):
         bn = await node.read_browse_name()
         return bn.Name
 
-    def run_test(self, custom_data_types = None):
+    def run_test(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_server_browsing())
+        loop.run_until_complete(self.check_server_browsing(env = env))
 
 

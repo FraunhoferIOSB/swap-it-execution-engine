@@ -14,7 +14,7 @@ from data_types.internal_data_converter import EngineOpcUaDataConverter
 
 class CheckExecutionEngineTypeGenerator(unittest.TestCase):
 
-    async def generate_opcua_types(self):
+    async def generate_opcua_types(self, env = None):
         iteration_time = 0.001
         server_url = "opc.tcp://localhost:4001"
         server_instance = ExecutionEngineServer(execution_engine_server_url = server_url, log_info=True, iteration_time=iteration_time)
@@ -48,9 +48,9 @@ class CheckExecutionEngineTypeGenerator(unittest.TestCase):
                 return node_list[i]
         return False
 
-    def check_start_simple_server(self):
+    def check_start_simple_server(self, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.generate_opcua_types())
+        return loop.run_until_complete(self.generate_opcua_types(env = env))
 
 
 

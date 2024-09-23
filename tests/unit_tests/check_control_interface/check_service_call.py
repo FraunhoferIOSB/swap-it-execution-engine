@@ -15,8 +15,8 @@ from util.start_docker_compose import DockerComposeEnvironment
 from values.service_parameters import ServiceParameter
 
 class CheckServiceCall(unittest.TestCase):
-    async def check_service_call_from_literal(self):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_service_call_from_literal(self, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
+        #env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
@@ -63,7 +63,7 @@ class CheckServiceCall(unittest.TestCase):
         #todo
         print("not implemented yet")
 
-    def run_check_service_call_from_literal(self):
+    def run_check_service_call_from_literal(self, env = None):
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.check_service_call_from_literal())
+        loop.run_until_complete(self.check_service_call_from_literal(env = env))
 

@@ -12,10 +12,10 @@ from .check_execution_engine_server import CheckExecutionEngineServer
 from .check_opcua_type_generator import CheckExecutionEngineTypeGenerator
 from .check_data_converter import CheckInternalDataConverter
 class RunExecutionEngineLogicTests(unittest.TestCase):
-    def run_execution_engine_logic_tests(self,custom_type_definitions = None):
+    def run_execution_engine_logic_tests(self,custom_type_definitions = None, env = None):
         print("check_type_generator")
         check_type_generator = CheckExecutionEngineTypeGenerator()
-        custom_type_definitions = check_type_generator.check_start_simple_server()
+        custom_type_definitions = check_type_generator.check_start_simple_server(env = env)
         print("check_execution_list")
         check_execution_list = CheckExecutionList()
         check_execution_list.run_tests()

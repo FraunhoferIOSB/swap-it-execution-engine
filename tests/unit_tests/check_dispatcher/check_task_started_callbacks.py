@@ -16,8 +16,7 @@ from asyncua import ua
 
 class CheckTaskStartedDispatcherCallback(unittest.TestCase):
 
-    async def check_task_started_callbacks(self, custom_server_types = None):
-        env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])
+    async def check_task_started_callbacks(self, custom_server_types = None, env = DockerComposeEnvironment(["Device_Registry", "Service_Server"])):
         env.run_docker_compose()
         await asyncio.sleep(10)
         helper = Helper()
@@ -63,9 +62,9 @@ class CheckTaskStartedDispatcherCallback(unittest.TestCase):
         await asyncio.sleep(10)
         return custom_server_types
 
-    def check_task_started_callbacks_test(self, custom_data_types = None):
+    def check_task_started_callbacks_test(self, custom_data_types = None, env = None):
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(self.check_task_started_callbacks(custom_server_types = custom_data_types))
+        return loop.run_until_complete(self.check_task_started_callbacks(custom_server_types = custom_data_types, env = env))
 
 
 
