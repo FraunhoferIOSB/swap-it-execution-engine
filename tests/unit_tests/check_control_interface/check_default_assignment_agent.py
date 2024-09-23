@@ -36,7 +36,7 @@ class CheckAssignmentAgent(unittest.TestCase):
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
         server_url = "opc.tcp://localhost:8000"
-        target_server_list = ["opc.tcp://localhost:4081", "opc.tcp://localhost:4082"]
+        target_server_list = ["opc.tcp://localhost:4080", "opc.tcp://localhost:4082"]
         iteration_time = 0.001
         filter_agent_input = [service_browse_name, ["None"], ["None"]]
         a_agent = AssignAgent(True)
@@ -59,7 +59,7 @@ class CheckAssignmentAgent(unittest.TestCase):
                     client_ids.append(client_id)
                     await client.disconnect()
         time.sleep(3)
-        #now check the assignment, opc.tcp://localhost:4081 should be assigned, since it has only 2 elements
+        #now check the assignment, opc.tcp://localhost:4080 should be assigned, since it has only 2 elements
         target_agent = await DefaultAssignmentAgent(server_url, agent_list).find_target_resource()
         self.assertEqual(str(a_agent.convert_to_custom_url(target_agent, "opc.tcp://localhost:")), target_server_list[0])
         #next, remove the elements from server opc.tcp://localhost:4082 and re-assign

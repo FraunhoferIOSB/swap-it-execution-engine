@@ -15,7 +15,7 @@ class CheckControlInterface(unittest.TestCase):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
-        server_url = "opc.tcp://localhost:4081"
+        server_url = "opc.tcp://localhost:4080"
         iteration_time = 0.001
         env.stop_docker_compose()
         await asyncio.sleep(10)

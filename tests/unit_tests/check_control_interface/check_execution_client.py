@@ -22,7 +22,7 @@ class CheckExecutionClient(unittest.TestCase):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
-        server_url = "opc.tcp://localhost:4081"
+        server_url = "opc.tcp://localhost:4080"
         iteration_time = 0.001
         ee_url = "opc.tcp://localhost:4000"
         server_instance = ExecutionEngineServer(execution_engine_server_url=ee_url, log_info=True,

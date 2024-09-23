@@ -17,16 +17,16 @@ class CheckServerBrowsing(unittest.TestCase):
         env.run_docker_compose()
         time.sleep(10)
 
-        async with Client(url="opc.tcp://localhost:4081") as client:
+        async with Client(url="opc.tcp://localhost:4080") as client:
             #add a server to the target server list and check if it was browsed correctly
-            target_server = await TargetServerList(None, 0.001).get_target_server("opc.tcp://localhost:4081",
+            target_server = await TargetServerList(None, 0.001).get_target_server("opc.tcp://localhost:4080",
                                                                                   "GetPartsFromWarehouse")
             #check browsenames
             for browsename, value in zip([target_server.implementation, target_server.explored, target_server.url,
                                           target_server.Module_Type_SubType_BrowseName.Name,
                                           target_server.add_queue_element_bn.Name,
                                           target_server.remove_queue_element_bn.Name],
-                                         ["open62541", True, "opc.tcp://localhost:4081",
+                                         ["open62541", True, "opc.tcp://localhost:4080",
                                           "WarehouseModuleType", "add_queue_element", "remove_queue_element"]):
                 self.assertEqual(browsename, value)
             # check nodeIds

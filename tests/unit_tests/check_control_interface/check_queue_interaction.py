@@ -19,7 +19,7 @@ class QueueInteraction(unittest.TestCase):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
-        server_url = "opc.tcp://localhost:4081"
+        server_url = "opc.tcp://localhost:4080"
         iteration_time = 0.001
         # start client, connect to server and explore the server's namespace
         async with (Client(url=server_url) as client):

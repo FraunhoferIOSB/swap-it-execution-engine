@@ -42,7 +42,7 @@ class CheckServiceStartedInputFiltering(unittest.TestCase):
                                converter.convert_to_opcua_struct(struct_values.assignment_agent, server_instance.custom_data_types, "AssignmentAgent"),
                                converter.convert_to_opcua_struct(struct_values.registry, server_instance.custom_data_types, "DeviceRegistry")]
             #check for a static resource assignment
-            self.assertEqual(cb.callback_helpers.check_for_target_type(server_instance, input_parameter, "ResourceAssignment"), "opc.tcp://service_server:4081")
+            self.assertEqual(cb.callback_helpers.check_for_target_type(server_instance, input_parameter, "ResourceAssignment"), "opc.tcp://service_server:4080")
             #check for capabilities
             self.assertEqual(await AssignAgent(custom_server_types).create_filter_agent_input_arguments([["test_name"], input_parameter], service_name, custom_server_types), ['Milling', ['test_numeric'], ['5']])
             #check for static assignment agent

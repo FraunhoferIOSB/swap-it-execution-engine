@@ -20,7 +20,7 @@ class CheckAssignment(unittest.TestCase):
         env.run_docker_compose()
         time.sleep(10)
         service_browse_name = "GetPartsFromWarehouse"
-        server_url = "opc.tcp://localhost:4081"
+        server_url = "opc.tcp://localhost:4080"
         iteration_time = 0.001
         types = DemoScenarioStructureTypes()
         if custom_data_types == None:
@@ -32,7 +32,7 @@ class CheckAssignment(unittest.TestCase):
             server = await server_instance.start_server(types.structures, DataObject(EngineOpcUaDataConverter()))
             custom_data_types = server_instance.custom_data_types
         capa, _ = self.create_structures(custom_data_types, "ResourceAssignment",
-                               {"job_resource":"opc.tcp://service_server:4081"},
+                               {"job_resource":"opc.tcp://service_server:4080"},
                                "Milling_Capabilities", {"test_numeric": 5, "test_boolean": False})
         target_server_list = TargetServerList(None, iteration_time)
         target_server = await target_server_list.get_target_server(server_url, service_browse_name)
