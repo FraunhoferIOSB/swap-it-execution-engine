@@ -12,13 +12,13 @@ class DockerComposeEnvironment:
         self.docker = None
         self.default_docker_compose_files = ["./tests/test_helpers/util/docker-compose.yaml"]
 
-    def start_docker_compose(self, compose_files = None):
+    def start_docker_compose(self, compose_files):
         compose_files = self.default_docker_compose_files if compose_files is None else compose_files
         self.docker = DockerClient(compose_files=compose_files)
         self.docker.compose.up(services=self.services, pull="missing")
 
-    def run_docker_compose(self):
-        thread = threading.Thread(target=self.start_docker_compose)
+    def run_docker_compose(self, compose_files = None):
+        thread = threading.Thread(target=self.start_docker_compose, args=(compose_files,))
         thread.start()
 
     def stop_docker_compose(self):
