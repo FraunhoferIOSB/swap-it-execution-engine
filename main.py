@@ -1,3 +1,9 @@
+# Licensed under the MIT License.
+# For details on the licensing terms, see the LICENSE file.
+# SPDX-License-Identifier: MIT
+
+# Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+
 import asyncio, sys
 from execution_engine_logic.execution_engine import ExecutionEngine
 from dispatcher.dispatcher_configuration import DispatcherConfig

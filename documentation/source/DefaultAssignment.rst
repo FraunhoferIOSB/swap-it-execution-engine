@@ -13,8 +13,10 @@
 Default Assignment
 =========================
 
+
 The `Demonstration Scenario <https://github.com/swap-it/demo-scenario>`_ defines a structure SWAP_Order that must be handed over to each service to be executed.
 For the Default Assignment, a Device Registry is required. However, instead of an external Assignment Agent, the default assignment behavior of the execution engine is deployed.
+
 PFDL Definition
 ================
 
