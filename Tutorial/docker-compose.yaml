@@ -5,8 +5,17 @@
 #Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 services:
+  Assignment_Agent:
+    image: ghcr.io/swap-it/demo-scenario/assignment-agent:execution_engine_tutorials
+    hostname: assignment_agent
+    expose:
+      - 10000
+    ports:
+      - "10000:10000"
+    networks:
+      - demonstration_scenario_network
   Device_Registry:
-    image: ghcr.io/swap-it/demo-scenario/device_registry:latest
+    image: ghcr.io/swap-it/demo-scenario/device_registry:execution_engine_tutorials
     hostname: device_registry
     expose:
       - 8000
@@ -15,7 +24,7 @@ services:
     networks:
       - demonstration_scenario_network
   Service_Server:
-    image: ghcr.io/swap-it/demo-scenario/demo-scenario:latest
+    image: ghcr.io/swap-it/demo-scenario/demo-scenario:execution_engine_tutorials
     hostname: service_server
     expose:
       - 4051
@@ -31,7 +40,7 @@ services:
       - "4051:4051"
       - "4061:4061"
       - "4071:4071"
-      - "4081:4081"
+      - "4080:4080"
       - "4082:4082"
       - "4083:4083"
       - "4091:4091"

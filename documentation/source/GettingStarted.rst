@@ -11,6 +11,84 @@
 Getting Started
 ================
 
+.. _simple started:
+
+Start an Execution Engine
+==========================
+
+To start an Execution Engine for custom process execution, run the main.py file. However, the main Program requires a set of mandatory
+and optional arguments that must be handed over from as program arguments:
+
+Mandatory Arguments
+-------------------------
+
+- execution_engine_server_url
+- path_to_pfdl
+
+Here, the execution_engine_server_url specifies the web-address of the Execution Engines OPC UA server and the
+path_to_pfdl a path to a local PFDL file that should be executed with the Execution Engine.
+
+Example configurations could be:
+- opc.tcp://localhost:4840
+- ./PFDL_Examples/advanced.pdfl
+
+
+Optional Arguments
+--------------------
+The optional arguments are used to create kwargs for the Execution Engine object. Here, each argument that is set must provide
+a key and a value, separated by an equals. A potential configuration could be:
+
+- "dashboard_host_address"="http://localhost:8080"
+- "device_registry_url"="opc.tcp://localhost:8000"
+- "custom_url"="opc.tcp://localhost:"
+- "number_default_clients"=5
+- "assignment_agent_url"="opc.tcp://localhost:10000"
+- "delay_start"=20
+
+Run the main.py file
+-----------------------
+The main.py file can be started from a terminal with at least both mandatory program arguments set:
+
+.. code-block:: python
+
+    python3 main.py "opc.tcp://localhost:4840" "./PFDL_Examples/advanced.pdfl"
+
+In case that some or all optional arguments should be deployed, the command would look like:
+
+.. code-block:: python
+
+    python3 main.py "opc.tcp://localhost:4840" "./PFDL_Examples/advanced.pdfl" "dashboard_host_address"="http://localhost:8080" "device_registry_url"="opc.tcp://localhost:8000" "number_default_clients"=5
+
+
+
+
+Installation Requirements
+---------------------------
+Ensure that the python version is 3.10.14 and the required python packages are installed:
+
+.. code-block:: python
+
+   pip install asyncua==1.1.5 nest-asyncio==1.6.0 pfdl-scheduler==0.9.0 python-on-whales==0.73.0
+
+
+Besides, Graphviz (https://graphviz.org/) must be installed on the system.
+
+
+Tutorials
+==========
+For the tutorial section, we deploy the `Demonstration Scenario <https://github.com/swap-it/demo-scenario>`_ environment,
+so that only an execution engine must be configured and a PFDL file specified. All other requiret components, such as a Device Registry, Assignment Agents
+or shop floor resources are started as pre-build docker environments. The executable code of the tutorials can be found in the `Tutorials Section <https://github.com/FraunhoferIOSB/swap-it-execution-engine/tree/main/Tutorial>`_ of this repository.
+
+.. toctree::
+   :maxdepth: 4
+
+   Tutorials
+   StaticAssignment
+   DefaultAssignment
+   DynamicAssignment
+
+
 
 .. _Configure an Execution Engine:
 
@@ -118,31 +196,3 @@ over to the Execution Engine object (Table 2). Table 1 displays the :ref:`Dispat
        | "opc.tcp://swap_server:4840" docker = "opc.tcp://localhost:"
        | will adjust the url to "opc.tcp://localhost:4840".
 
-.. _simple started:
-
-Start an Execution Engine
-==========================
-
-An Execution Engine can simple be started with:
-
-.. code-block:: python
-
-    git clone https://github.com/FraunhoferIOSB/swap-it-execution-engine.git
-    cd swap-it-execution-engine
-    python main.py
-
-
-**Important Note**
-Ensure that the python version is greater 3.10 and the required python packages are installed:
-
-.. code-block:: python
-
-   pip install asyncua==1.1.5 nest-asyncio==1.6.0 pfdl-scheduler==0.9.0 coverage==7.6.1 python-on-whales==0.73.0
-
-
-
-
-.. toctree::
-   :maxdepth: 4
-
-   Tutorials

@@ -51,7 +51,8 @@ Resources to execute a service from a Device Registry. Then the Execution Engine
 of each Resource and selects the resource with the fewest queue entires.
 
 
-
+Capability-based Assignment
+===========================
 
 
 

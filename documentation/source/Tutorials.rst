@@ -5,8 +5,12 @@
 
     Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-.. _Tutorials:
 
-=========
-Tutorials
-=========
+============================
+Service Specific Assignment
+============================
+
+
+================================
+Service Specific Device Registry
+================================

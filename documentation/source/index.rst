@@ -126,10 +126,10 @@ of the current state of the execution.
 .. toctree::
    :maxdepth: 2
 
+   GettingStarted
    ExecutionEngineLogic
    Dispatcher
    ControlInterface
-   GettingStarted
    Glossary
    Contact
    related_projects
