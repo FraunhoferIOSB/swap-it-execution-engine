@@ -44,7 +44,7 @@ class ExecutionEngine:
         ClientControlInterface = ControlInterface(self.server, self.server_instance, self.dispatcher.dispatcher_callbacks.service_execution_list,
                                                   TargetServerList(self.server, self.iteration_time), self.device_registry_url, self.assignment_agent_url, self.custom_url,
                                                   self.iteration_time, self.log_info)
-        ClientControlInterface.init_default_clients(self.number_default_clients)
+        ClientControlInterface.init_default_clients(int(self.number_default_clients))
         self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
         self.dispatcher.start_dispatcher()
         async with self.server_instance:

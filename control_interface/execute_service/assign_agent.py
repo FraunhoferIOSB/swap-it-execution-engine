@@ -32,6 +32,8 @@ class AssignAgent:
             async with client:
                 agent = await self.assign_service_to_resource(client, agent_list, device_registry_url)
                 await client.disconnect()
+            if self.docker != None:
+                agent = self.convert_to_custom_url(agent, self.docker)
             return agent
 
     def convert_to_custom_url(self, resource, custom_url):

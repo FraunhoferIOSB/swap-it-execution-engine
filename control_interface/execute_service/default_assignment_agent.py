@@ -23,6 +23,7 @@ class DefaultAssignmentAgent:
                         self.agents["QueueElements"].append(len(queue))
                     else:
                         self.agents["QueueElements"].append(0)
+                print(self.agents)
                 target_agent = await client.get_node(self.agents["NodeId"][self.agents["QueueElements"].index(min(self.agents["QueueElements"]))]).read_browse_name()
                 return target_agent.Name
             else:
