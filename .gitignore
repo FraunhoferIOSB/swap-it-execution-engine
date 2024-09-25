@@ -5,6 +5,7 @@ start_subprocesses.py
 Dockerfilebeginner
 tests/unit_tests/execute_coverage_py_on_single_script.txt
 lib64
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
