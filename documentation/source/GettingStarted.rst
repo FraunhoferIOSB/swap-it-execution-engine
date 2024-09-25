@@ -83,7 +83,6 @@ or shop floor resources are started as pre-build docker environments. The execut
 .. toctree::
    :maxdepth: 4
 
-   Tutorials
    StaticAssignment
    DefaultAssignment
    DynamicAssignment
