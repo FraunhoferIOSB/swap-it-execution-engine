@@ -227,7 +227,7 @@ that the input arguments for the callback functions are extracted from the sched
         return input_parameters
 
 The function map_input_parameters_to_EE() is not a callback wrapper,
-it only transforms input data structures from the PFDL-schduler format to the Execution Engine format.
+it only transforms input data structures from the PFDL-scheduler format to the Execution Engine format.
 
 In the second step, a function is required that invokes the register_callback functions of the PFDL-Scheduler and thus,
 registers the callback wrappers within the PFDL-Scheduler:

@@ -22,9 +22,9 @@ can be utilized to either add new variables or to update variable values within 
    :width: 85%
    :alt: Overview
 
-   **Figure 1:** Interaction between the Data Oject, the Dispatcher and Resources on the Shop Floor
+   **Figure 1:** Interaction between the Data Object, the Dispatcher and Resources on the Shop Floor
 
-At the lowest level, each Task within the Data Object is repsresnted as an individual OPC UA Object. The corresponding
+At the lowest level, each Task within the Data Object is represented as an individual OPC UA Object. The corresponding
 ObjectType is illustrated in Figure 2. Each Object has two variables attached by default: the TaskName provides the identifier of the Task
 and the StateVariable indicates the current execution status of the corresponding task. In addition, each TaskObject can be extended with an
 arbitrary number of variables that are either added to the TaskObject when it is instantiated, or as a result of a Service or Task
@@ -63,7 +63,7 @@ of the simpleTask completes.
 
 Finally, after the Parallel condition with the loopTask and the simpleTask is completed, the productionTask receives variable_2 and variable_3 as
 output and attaches them to its own TaskObject within the Data Object, so that it can be used from the productionTask to either specify input values to services and taks,
-or to evaluate conditions. Furthermore, the loopTaskObjwect and the simpleTaskObject are removed from the Data Object, so that
+or to evaluate conditions. Furthermore, the loopTaskObject and the simpleTaskObject are removed from the Data Object, so that
 only Tasks that are currently executed are represented within the Data Object.
 
 .. figure:: /images/DataObject.png

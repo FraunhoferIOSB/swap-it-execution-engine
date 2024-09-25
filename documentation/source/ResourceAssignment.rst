@@ -48,11 +48,7 @@ Default Resource Assignment
 In case that none of the above presented approaches is configured for an Execution Engine, the Resource Assignment
 is accomplished with the Execution Engine's default behaviour. Here, the Execution Engine first requests all available
 Resources to execute a service from a Device Registry. Then the Execution Engine checks the number of queue elements
-of each Resource and selects the resource with the fewest queue entires.
-
-
-Capability-based Assignment
-===========================
+of each Resource and selects the resource with the fewest queue entries.
 
 
 

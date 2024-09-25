@@ -24,7 +24,7 @@ For the asynchronous communication between the Clients and the Execution Engine,
 that lists all Services that are currently executed. Each Service in the dictionary is represented by an unique identifier, the context (Task)
 of the service execution, a boolean variable that indicates whether the service execution is completed or not, and the name of the service.
 As soon as a service execution is started by a Client, the Client adds the service to the dictionary. After the service completion,
-the Client sets the boolean variable to TRUE. On the other side, the Execution Engine iterates through the execution dirctonary and checks whether
+the Client sets the boolean variable to TRUE. On the other side, the Execution Engine iterates through the execution dictionary and checks whether
 Service executions are completed. If so, the client provides a token to the dispatcher, which then executes the service finished callback, and removes the
 Service from the dictionary.
 

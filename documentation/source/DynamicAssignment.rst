@@ -15,7 +15,7 @@ Dynamic Assignment
 
 
 The `Demonstration Scenario <https://github.com/swap-it/demo-scenario>`_ defines a structure SWAP_Order that must be handed over to each service to be executed.
-For the Default Assignment, a Device Registry is required, as well as an external assignment agent. The assignment agent will be globally registered in the execution engine,
+For the Dynamic Assignment, a Device Registry is required, as well as an external assignment agent. The assignment agent will be globally registered in the execution engine,
 so that it is considered for each assignment step.
 
 
@@ -159,4 +159,4 @@ engine should be captured, the command line argument can be simply adjusted to:
 
 .. code-block:: python
 
-    python Tutorial/dynamic_assignment.py "opc.tcp://localhost:4840" "Tutorial/PFDL/dynamic_assignment.pfdl" "dashboard_host_address"="http://localhost:8080" "log_info"=True "device_registry_url"="opc.tcp://localhost:8000" "custom_url"="opc.tcp://localhost:"
+    python Tutorial/dynamic_assignment.py "opc.tcp://localhost:4840" "Tutorial/PFDL/dynamic_assignment.pfdl" "dashboard_host_address"="http://localhost:8080" "log_info"=True "device_registry_url"="opc.tcp://localhost:8000" "custom_url"="opc.tcp://localhost:" "number_default_clients"=5 "assignment_agent_url"="opc.tcp://localhost:10000"

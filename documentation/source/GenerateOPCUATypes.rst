@@ -20,7 +20,7 @@ to generate the input for the Service Methods and to extract the received servic
 Internal Execution Engine Types
 ================================
 The internal Execution Engine types are mainly required for the interface between a custom scheduler and the Dispatcher.
-Here these internal data types enable a standardized format for the exchange of parameter. Since the Execution Engine genrates custom OPC UA
+Here these internal data types enable a standardized format for the exchange of parameter. Since the Execution Engine generates custom OPC UA
 data types from the custom type definitions, each type is declared as a custom structure and it is not possible to directly declare single variables.
 Here the definition of a simple string variable cannot be accomplished with *string_variable = "TestString"*.
 Instead, the *string_variable* must be declared as a field of a structure, e.g.:

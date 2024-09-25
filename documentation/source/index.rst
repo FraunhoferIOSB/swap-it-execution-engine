@@ -116,7 +116,7 @@ PFDL Scheduler
 The PFDL itself is just the description language and needs to be parsed, validated, and transformed into a structure to
 control the production process. All of these functionalities is done by the so-called `PFDL Scheduler <https://github.com/iml130/pfdl>`_. The scheduler parses and validates PFDL
 files, which are then transformed into a domain model, which is a representation of the production order as a python object. This model can then
-be used to generate a petri net, which is used to control the production by triggering events and receivve events, e.g. when a service has finished.
+be used to generate a petri net, which is used to control the production by triggering events and receive events, e.g. when a service has finished.
 To enable this, the PFDL provides interfaces in both directions enabling a process control that makes use of generated PFDLs and keep track
 of the current state of the execution.
 

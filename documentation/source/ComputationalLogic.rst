@@ -25,9 +25,9 @@ Here, the nested EventLoops of the Dispatcher interface Callbacks can directly i
 such as the adding or removing of variables and objects, or the reading and writing of variable values.
 
 Since OPC UA Clients of the Control Interface are started from the Dispatcher Interface's *Service Started Callback*, the `Python queue <https://docs.python.org/3/library/queue.html>`_
-library is deployed to ensure a safe exchange of information between the different threads. On the other side, the Main Thread receives information from the COntrol Interface about the completion of services,
-as well as the provision of execution parameter. Here a *Semaphor* between the different threads is utilized, where the Control Interfaces adds elements to either the service execution list or the Execution Parameter List. The Main Thread,
-checks at each iteration whether elements were added to the list or not. If so, the Main Thread can access these information through the callbacks or the OPC UA Server and react to their occurence.
+library is deployed to ensure a safe exchange of information between the different threads. On the other side, the Main Thread receives information from the Control Interface about the completion of services,
+as well as the provision of execution parameter. Here a *Semaphore* between the different threads is utilized, where the Control Interfaces adds elements to either the service execution list or the Execution Parameter List. The Main Thread,
+checks at each iteration whether elements were added to the list or not. If so, the Main Thread can access these information through the callbacks or the OPC UA Server and react to their occurrence.
 
 
 .. figure:: /images/ComputationalLogic.png

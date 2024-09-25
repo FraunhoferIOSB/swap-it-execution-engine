@@ -77,7 +77,7 @@ Besides, Graphviz (https://graphviz.org/) must be installed on the system.
 Tutorials
 ==========
 For the tutorial section, we deploy the `Demonstration Scenario <https://github.com/swap-it/demo-scenario>`_ environment,
-so that only an execution engine must be configured and a PFDL file specified. All other requiret components, such as a Device Registry, Assignment Agents
+so that only an execution engine must be configured and a PFDL file specified. All other required components, such as a Device Registry, Assignment Agents
 or shop floor resources are started as pre-build docker environments. The executable code of the tutorials can be found in the `Tutorials Section <https://github.com/FraunhoferIOSB/swap-it-execution-engine/tree/main/Tutorial>`_ of this repository.
 
 .. toctree::
@@ -86,6 +86,9 @@ or shop floor resources are started as pre-build docker environments. The execut
    StaticAssignment
    DefaultAssignment
    DynamicAssignment
+   ServiceSpecificAssignment
+   ServiceSpecificDeviceRegistry
+   CapabilityBasedAssignment
 
 
 
