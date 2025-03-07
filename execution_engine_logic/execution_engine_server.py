@@ -7,7 +7,7 @@
 from asyncua import Server
 from execution_engine_logic.service_execution.execution_results import ExecutionParameterList
 from execution_engine_logic.data_types.opcua_type_generator import TypeGenerator
-
+import os
 class ExecutionEngineServer:
 
     def __init__(self, execution_engine_server_url, iteration_time, log_info):
@@ -39,7 +39,8 @@ class ExecutionEngineServer:
         self.data_object = data_object
         self.data_object.set_idx(self.idx)
         self.data_object.set_server(self.server)
-        await self.server.import_xml("/app/swap-it-execution-engine/model/SWAP.Fraunhofer.Execution.Engine.Model.NodeSet2.xml")
+        print(os.getcwd())
+        await self.server.import_xml(os.path.join(os.getcwd(),"model/SWAP.Fraunhofer.Execution.Engine.Model.NodeSet2.xml"))
         namespaces = await self.server.get_namespace_array()
         for i in range(len(namespaces)):
             if str(namespaces[i]) == "http://execution.engine.swap.fraunhofer.de":
