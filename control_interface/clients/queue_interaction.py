@@ -12,7 +12,7 @@ class TargetServerQueue:
         self.iteration_time = iteration_time
         self.client = client
 
-    async def client_add_queue_element(self, target_server, service_uuid):
+    async def client_add_queue_element(self, target_server, service_uuid, order_id):
         client_identifier = str(uuid.uuid4())
         for i in range(len(target_server.client_custom_data_types["Name"])):
             if(str(target_server.client_custom_data_types["Name"][i]) == self.data_type):
@@ -20,6 +20,7 @@ class TargetServerQueue:
                 entry.Service_UUID=service_uuid
                 entry.Client_Identifier=client_identifier
                 entry.Queue_Element_State=await self.get_queue_state_enum(target_server)
+                entry.OrderId = order_id
                 id = str(target_server.add_queue_element_bn.NamespaceIndex)+":"+str(target_server.add_queue_element_bn.Name)
                 entry = ua.Variant(entry, ua.VariantType.ExtensionObject)
                 await self.client.get_node(target_server.service_queue).call_method(id, entry)
@@ -31,10 +32,10 @@ class TargetServerQueue:
                 state_variable_type = target_server.client_custom_data_types["Class"][i](0)
                 return state_variable_type
 
-    async def client_remove_queue_element(self, target_server, service_uuid, client_identifier):
+    async def client_remove_queue_element(self, target_server, service_uuid, client_identifier, order_id):
         for i in range(len(target_server.client_custom_data_types["Name"])):
             if (str(target_server.client_custom_data_types["Name"][i]) == self.data_type):
-                entry = target_server.client_custom_data_types["Class"][i](Service_UUID = service_uuid, Client_Identifier = client_identifier, Queue_Element_State = await self.get_queue_state_enum(target_server))
+                entry = target_server.client_custom_data_types["Class"][i](Service_UUID = service_uuid, Client_Identifier = client_identifier, Queue_Element_State = await self.get_queue_state_enum(target_server), OrderId = order_id)
                 id = str(target_server.remove_queue_element_bn.NamespaceIndex) + ":" + str(
                     target_server.remove_queue_element_bn.Name)
                 entry = ua.Variant(entry, ua.VariantType.ExtensionObject)
