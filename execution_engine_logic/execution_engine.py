@@ -4,22 +4,23 @@
 
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
-import asyncio
+import asyncio, uuid
 from datetime import datetime
 from asyncua import ua
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
 from execution_engine_logic.execution_engine_server import ExecutionEngineServer
+from execution_engine_logic.external_functionality.prioritizer import Prioritizer
 from execution_engine_logic.data_object.data_object_interaction import DataObject
 from control_interface.control_interface_highlevel import ControlInterface
 from control_interface.target_server.target_server_dict import TargetServerList
 
 class ExecutionEngine:
 
-    def __init__(self, server_url, dispatcher_object, iteration_time = 0.001, log_info = False, number_default_clients = 1, device_registry_url = None, assignment_agent_url = None,
+    def __init__(self, server_url, dispatcher_object, priority = 3, prioritizer = None, iteration_time = 0.1, log_info = False, number_default_clients = 1, device_registry_url = None, assignment_agent_url = None,
                  delay_start = None, custom_url = None):
         self.log_info = log_info if log_info else False
         self.server_url = server_url
-        self.iteration_time = iteration_time if iteration_time is not None else 0.001
+        self.iteration_time = iteration_time if iteration_time is not None else 0.1
         self.server = None
         self.server_instance = None
         self.number_default_clients = number_default_clients if number_default_clients else 1
@@ -29,6 +30,10 @@ class ExecutionEngine:
         self.dispatcher = dispatcher_object
         self.custom_url = custom_url if custom_url else None
         self.process = None
+        self.order_id = str(uuid.uuid4())
+        self.priority = priority
+        self.prioritizer = prioritizer
+        self.prioritizing_object = None
 
     async def start_server(self, struct_object, data_object):
         self.server = ExecutionEngineServer(self.server_url, self.iteration_time, self.log_info)
@@ -42,10 +47,16 @@ class ExecutionEngine:
         self.dispatcher.set_callbacks(self.server_instance, self.server)
         ClientControlInterface = ControlInterface(self.server, self.server_instance, self.dispatcher.dispatcher_callbacks.service_execution_list,
                                                   TargetServerList(self.server, self.iteration_time, self.dispatcher.timeout), self.device_registry_url, self.assignment_agent_url, self.custom_url,
-                                                  self.iteration_time, self.log_info, self.dispatcher.timeout)
+                                                  self.iteration_time, self.log_info, self.dispatcher.timeout, self.order_id)
         ClientControlInterface.init_default_clients(int(self.number_default_clients))
         self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
         self.dispatcher.start_dispatcher()
+        if self.prioritizer != None:
+            self.prioritizing_object = Prioritizer(self.priority, self.prioritizer, self.order_id, self.iteration_time)
+            self.prioritizing_object.start()
+            self.prioritizing_object.registered = True
+
+
         async with self.server_instance:
             while self.dispatcher.run_dispatcher():
                 service_uuid, task_uuid, name = self.dispatcher.dispatcher_callbacks.service_execution_list.remove_service()
@@ -59,10 +70,16 @@ class ExecutionEngine:
             for i in range(len(ClientControlInterface.client_dict["Client"])):
                 ClientControlInterface.client_dict["Client"][i].stop_control_interface_loop()
             print("[", datetime.now(), "] Shut down the Execution Engine ", self.server_instance)
+
+            if self.prioritizer != None:
+                print("[", datetime.now(), "] Remove the Order ", self.order_id, " from the Prioritizer ")
+                self.prioritizing_object.unregistered = True
+
             #while True:
             #    await asyncio.sleep(1)
             await self.server.stop_server()
             print("[", datetime.now(), "] Execution Engine Completed the Process Execution")
+
 
 
 
