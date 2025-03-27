@@ -88,7 +88,9 @@ a key and a value, separated by an equals. A potential configuration could be:
 - "custom_url"="opc.tcp://localhost:"
 - "number_default_clients"=5
 - "assignment_agent_url"="opc.tcp://localhost:10000"
-- "delay_start"=20"
+- "delay_start"=20
+- "priority=5"
+- "prioritizer_url=opc.tcp://localhost:12000"
 
 ### Run the main.py file
 
