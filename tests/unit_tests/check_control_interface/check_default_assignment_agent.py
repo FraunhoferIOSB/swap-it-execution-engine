@@ -65,7 +65,7 @@ class CheckAssignmentAgent(unittest.TestCase):
             for i in range(elements[1]):
                 queue = TargetServerQueue(iteration_time, client)
                 target_server = await t_server_list.get_target_server(target_server_list[1], service_browse_name)
-                await queue.client_remove_queue_element(target_server, service_ids[i+2], client_ids[i+2])
+                await queue.client_remove_queue_element(target_server, service_ids[i+2], client_ids[i+2], client_ids[i+2])
             await client.disconnect()
         time.sleep(3)
         target_agent = await DefaultAssignmentAgent(server_url, agent_list, 4).find_target_resource()

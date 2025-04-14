@@ -109,7 +109,7 @@ class CheckServiceStartedDispatcherCallback(unittest.TestCase):
 
             # wait until the service finished event of the milling service was observerd
             while observer.event_received == False:
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.01)
             server_namespace = CheckServerNamespace(2)
             await server_namespace.start_client(ee_url, server.get_node(server.nodes.objects), True)
             target_ee_objects = [production_task_uuid, task1_uuid]
