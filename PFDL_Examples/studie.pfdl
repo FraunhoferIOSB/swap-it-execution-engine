@@ -1,0 +1,101 @@
+# ##################
+# general data types
+# ##################
+
+Struct PfdlBoolean
+    value: boolean
+End
+Struct PfdlNumber
+    value: number
+End
+Struct PfdlString
+    value: string
+End
+
+# #########################
+# service struct data types
+# #########################
+
+# printing service
+Struct PrintingParameters
+    part_id: PfdlString
+    color: PfdlString
+End
+Struct PrintingService_Capabilities
+    printing_precision: string
+End
+
+# milling service
+Struct MillingParameters
+    nc_program: PfdlString
+End
+Struct MillingService_Capabilities
+    milling_precision: string
+End
+
+# ##################
+# process definition
+# ##################
+
+Task productionTask
+    printingTask
+        In
+            PrintingParameters
+                {
+                    "part_id" : {
+                        "value": "3"
+                    },
+                    "color" : {
+                        "value": "green"
+                    }
+                }
+            #PrintingService_Capabilities
+            #    {
+            #        "printing_precision": "1"
+            #    }
+        Out
+            success: PfdlBoolean
+    millingTask
+        In
+            MillingParameters
+                {
+                    "nc_program":
+                        {
+                        "value": "test"
+                        }
+                }
+            #MillingService_Capabilities
+            #    {
+            #        "milling_precision": "1"
+            #    }
+        Out
+            success: PfdlBoolean
+End
+
+Task printingTask
+    In
+        printing_params: PrintingParameters
+        #printing_capabilities: PrintingService_Capabilities
+    PrintingService
+        In
+            printing_params.part_id
+            printing_params.color
+            #printing_capabilities
+        Out
+            success: PfdlBoolean
+    Out
+        success
+End
+Task millingTask
+    In
+        milling_params: MillingParameters
+        #milling_capabilities: MillingService_Capabilities
+    MillingService
+        In
+            milling_params.nc_program
+            #milling_capabilities
+        Out
+            success: PfdlBoolean
+    Out
+        success
+End

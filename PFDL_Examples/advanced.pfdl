@@ -42,7 +42,7 @@ Task productionTask
                         "segment_id": "Default"
                     }
                     ],
-                    "number_light_segments": 5
+                    "number_light_segments": 30
                 }
         manufacture_stand_segment
             In
@@ -67,15 +67,15 @@ Task productionTask
                             "segment_id": "Default"
                         }
                         ],
-                        "number_light_segments": 5
+                        "number_light_segments": 30
                     }
             Out
                 order:SWAP_Order
     Mounting
-        In
-            order
-        Out
-            order:SWAP_Order
+            In
+                order
+            Out
+                order:SWAP_Order
 End
 
 
@@ -83,15 +83,15 @@ Task manufacture_stand_segment
     In
         order: SWAP_Order
     GetPartsFromWarehouse
-        In
-            order
-        Out
-            order: SWAP_Order
+            In
+                order
+            Out
+                order: SWAP_Order
     Milling
-        In
-            order
-        Out
-            order:SWAP_Order
+            In
+                order
+            Out
+                order:SWAP_Order
     Out
         order
 End
