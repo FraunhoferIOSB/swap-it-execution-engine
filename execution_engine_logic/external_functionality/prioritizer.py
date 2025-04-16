@@ -4,7 +4,7 @@ import asyncio, threading
 
 class Prioritizer:
 
-    def __init__(self, priority, proritizer_url, order_id, iteration_time):
+    def __init__(self, priority, proritizer_url, order_id, iteration_time, dispatcher):
         self.priority = priority
         self.proritizer_url = proritizer_url
         self.order_id = order_id
@@ -15,6 +15,7 @@ class Prioritizer:
         self.add_order = None
         self.remove_order = None
         self.client = None
+        self.dispatcher = dispatcher
 
     async def browse_module(self):
         objects = self.client.nodes.objects
@@ -45,18 +46,19 @@ class Prioritizer:
         control_interface_loop.run_until_complete(self.run_client())
 
     async def run_client(self):
-        async with Client(self.proritizer_url) as self.client:
-            await self.browse_module()
-            run = True
-            while run:
-                if self.registered == True:
-                    await self.register()
-                    self.registered = True
-                    self.registered = False
-                if self.unregistered == True:
-                    await self.unregister()
-                    self.unregistered = False
-                    run = False
-                await asyncio.sleep(self.iteration_time)
-            await self.client.disconnect()
+        while self.dispatcher.run_dispatcher():
+            async with Client(self.proritizer_url) as self.client:
+                await self.browse_module()
+                run = True
+                while run:
+                    if self.registered == True:
+                        await self.register()
+                        self.registered = True
+                        self.registered = False
+                    if self.unregistered == True:
+                        await self.unregister()
+                        self.unregistered = False
+                        run = False
+                    await asyncio.sleep(self.iteration_time)
+                await self.client.disconnect()
 

@@ -18,7 +18,6 @@ class MQTTClient:
 
     def publish(self, message):
         self.client.publish(self.topic, json.dumps(message))
-        print(f"Published to {self.topic}: {message}")
 
 class SubHandlerStarted:
 
@@ -26,7 +25,6 @@ class SubHandlerStarted:
         self.mqtt_client = mqtt_client
 
     def event_notification(self, event):
-        print("New started event received:", event)
         custom_properties = {}
         for (i, j) in event.get_event_props_as_fields_dict().items():
             if (str(i) == "service_uuid" or
@@ -34,13 +32,11 @@ class SubHandlerStarted:
                     str(i) == "time" or
                     str(i) == "ee_url"):
                 custom_properties[i] = j.Value
-        print(custom_properties)
         self.mqtt_client.publish(custom_properties)
 
 class SubHandlerTaskStarted:
 
     def event_notification(self, event):
-        print("New task started event received:", event)
         custom_properties = {}
         for (i, j) in event.get_event_props_as_fields_dict().items():
             if (str(i) == "service_uuid" or
@@ -48,12 +44,10 @@ class SubHandlerTaskStarted:
                     str(i) == "time" or
                     str(i) == "ee_url"):
                 custom_properties[i] = j.Value
-        print(custom_properties)
 
 class SubHandlerTaskFinished:
 
     def event_notification(self, event):
-        print("New task finished event received:", event)
         custom_properties = {}
         for (i,j) in event.get_event_props_as_fields_dict().items():
             if (str(i) == "service_uuid" or
@@ -61,7 +55,6 @@ class SubHandlerTaskFinished:
                         str(i) == "time" or
                             str(i) == "ee_url"):
                 custom_properties[i] = j.Value
-        print(custom_properties)
 
 class SubHandlerFinished:
 
@@ -69,7 +62,6 @@ class SubHandlerFinished:
         self.mqtt_client = mqtt_client
 
     def event_notification(self, event):
-        print("New finished event received:", event)
         custom_properties = {}
         for (i,j) in event.get_event_props_as_fields_dict().items():
             if (str(i) == "service_uuid" or
@@ -77,17 +69,16 @@ class SubHandlerFinished:
                         str(i) == "time" or
                             str(i) == "ee_url"):
                 custom_properties[i] = j.Value
-        print(custom_properties)
         self.mqtt_client.publish(custom_properties)
 
 
 class EventListener:
 
-    def __init__(self, ee_url, running):
+    def __init__(self, ee_url, dispatcher):
         self.client = None
         self.server_object = None
         self.ee_url = ee_url
-        self.running = running
+        self.dispatcher = dispatcher
         self.mqtt_client = MQTTClient()
 
     async def subscribe_service_started(self):
@@ -117,7 +108,7 @@ class EventListener:
             await self.subscribe_service_finished()
             await self.subscribe_task_started()
             await self.subscribe_task_finished()
-            while self.running:
+            while self.dispatcher.run_dispatcher():
                 await asyncio.sleep(1)
 
     def start_client(self):
@@ -126,6 +117,5 @@ class EventListener:
 
     def run(self):
         thread = threading.Thread(target=self.start_client)
-        print("start the thread")
         thread.start()
 

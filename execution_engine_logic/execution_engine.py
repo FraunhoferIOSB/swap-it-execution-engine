@@ -5,7 +5,6 @@
 # Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 
 import asyncio, uuid
-import asyncio, time
 from datetime import datetime
 from asyncua import ua
 from execution_engine_logic.data_types.internal_data_converter import EngineOpcUaDataConverter
@@ -46,8 +45,12 @@ class ExecutionEngine:
         if self.delay_start != None:
             await asyncio.sleep(self.delay_start)
         await self.start_server(self.dispatcher.structs, DataObject(EngineOpcUaDataConverter()))
+        if self.prioritizer != None:
+            self.prioritizing_object = Prioritizer(self.priority, self.prioritizer, self.order_id, self.iteration_time, self.dispatcher)
+            self.prioritizing_object.start()
+            self.prioritizing_object.registered = True
         async with self.server_instance:
-            EventListener(self.server.server_url, True).run()
+            EventListener(self.server.server_url, self.dispatcher).run()
             self.dispatcher.set_callbacks(self.server_instance, self.server)
             ClientControlInterface = ControlInterface(self.server, self.server_instance,
                                                       self.dispatcher.dispatcher_callbacks.service_execution_list,
@@ -55,25 +58,11 @@ class ExecutionEngine:
                                                                        self.dispatcher.timeout),
                                                       self.device_registry_url, self.assignment_agent_url,
                                                       self.custom_url,
-                                                      self.iteration_time, self.log_info, self.dispatcher.timeout)
+                                                      self.iteration_time, self.log_info, self.dispatcher.timeout, self.order_id)
             ClientControlInterface.init_default_clients(int(self.number_default_clients))
             self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
             await asyncio.sleep(5)
             self.dispatcher.start_dispatcher()
-        self.dispatcher.set_callbacks(self.server_instance, self.server)
-        ClientControlInterface = ControlInterface(self.server, self.server_instance, self.dispatcher.dispatcher_callbacks.service_execution_list,
-                                                  TargetServerList(self.server, self.iteration_time, self.dispatcher.timeout), self.device_registry_url, self.assignment_agent_url, self.custom_url,
-                                                  self.iteration_time, self.log_info, self.dispatcher.timeout, self.order_id)
-        ClientControlInterface.init_default_clients(int(self.number_default_clients))
-        self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
-        self.dispatcher.start_dispatcher()
-        if self.prioritizer != None:
-            self.prioritizing_object = Prioritizer(self.priority, self.prioritizer, self.order_id, self.iteration_time)
-            self.prioritizing_object.start()
-            self.prioritizing_object.registered = True
-
-
-        async with self.server_instance:
             while self.dispatcher.run_dispatcher():
                 service_uuid, task_uuid, name = self.dispatcher.dispatcher_callbacks.service_execution_list.remove_service()
                 if service_uuid != None:
