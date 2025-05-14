@@ -74,12 +74,14 @@ class SubHandlerFinished:
 
 class EventListener:
 
-    def __init__(self, ee_url, dispatcher):
+    def __init__(self, ee_url, dispatcher, mqtt_url, mqtt_port):
         self.client = None
         self.server_object = None
         self.ee_url = ee_url
         self.dispatcher = dispatcher
-        self.mqtt_client = MQTTClient()
+        self.mqtt_url =  mqtt_url
+        self.mqtt_port = mqtt_port
+        self.mqtt_client = MQTTClient(broker=self.mqtt_url, port=self.mqtt_port) if ((self.mqtt_port is not None) or (self.mqtt_url is not None)) else MQTTClient()
 
     async def subscribe_service_started(self):
         myevent = await self.client.nodes.root.get_child(["0:Types", "0:EventTypes", "0:BaseEventType", "3:ServiceStartedEvent"])

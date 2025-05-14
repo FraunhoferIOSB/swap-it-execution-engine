@@ -10,7 +10,7 @@ from execution_engine_logic.data_types.opcua_type_generator import TypeGenerator
 import os
 class ExecutionEngineServer:
 
-    def __init__(self, execution_engine_server_url, iteration_time, log_info):
+    def __init__(self, execution_engine_server_url, iteration_time, log_info, information_model_path):
         self.server_url = execution_engine_server_url
         self.log_info = log_info
         self.iteration_time = iteration_time
@@ -20,6 +20,7 @@ class ExecutionEngineServer:
         self.data_object = None
         self.custom_data_types = None
         self.parameters = ExecutionParameterList()
+        self.information_model_path = information_model_path
         self.service_execution_states = [
             "ReadyForExecution",
             "ExecutionInProgess",
@@ -40,7 +41,7 @@ class ExecutionEngineServer:
         self.data_object.set_idx(self.idx)
         self.data_object.set_server(self.server)
         print(os.getcwd())
-        await self.server.import_xml(os.path.join(os.getcwd(),"model/SWAP.Fraunhofer.Execution.Engine.Model.NodeSet2.xml"))
+        await self.server.import_xml(self.information_model_path)
         namespaces = await self.server.get_namespace_array()
         for i in range(len(namespaces)):
             if str(namespaces[i]) == "http://execution.engine.swap.fraunhofer.de":

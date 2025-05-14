@@ -20,7 +20,9 @@ def main():
     execute_process(sys.argv[1], dispatcher_object, **optinal_arguments)
 
 
-def execute_process(server_url, dispatcher_object, log_info = False, device_registry_url = None, custom_url = None, number_default_clients = 1, assignment_agent_url = None, delay_start = None, priority = 2, prioritizer_url = None):
+def execute_process(server_url, dispatcher_object, log_info = False, device_registry_url = None, custom_url = None, number_default_clients = 1, assignment_agent_url = None,
+                    delay_start = None, priority = 2, prioritizer_url = None, information_model_path = os.path.join(os.getcwd(),"model/SWAP.Fraunhofer.Execution.Engine.Model.NodeSet2.xml"),
+                    mqtt_url = "localhost", mqtt_port = 1884):
 
     main_loop = asyncio.new_event_loop()
     main_loop.run_until_complete(ExecutionEngine(
@@ -33,7 +35,10 @@ def execute_process(server_url, dispatcher_object, log_info = False, device_regi
         assignment_agent_url= assignment_agent_url,
         delay_start=delay_start,
         priority = priority,
-        prioritizer = prioritizer_url
+        prioritizer = prioritizer_url,
+        information_model_path = information_model_path,
+        mqtt_url = mqtt_url,
+        mqtt_port = mqtt_port
     ).main())
 
 if __name__ == "__main__":

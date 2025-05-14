@@ -18,7 +18,7 @@ from execution_engine_logic.opcua_event_subscriber.subscriber import EventListen
 class ExecutionEngine:
 
     def __init__(self, server_url, dispatcher_object, priority = 3, prioritizer = None, iteration_time = 0.1, log_info = False, number_default_clients = 1, device_registry_url = None, assignment_agent_url = None,
-                 delay_start = None, custom_url = None):
+                 delay_start = None, custom_url = None, information_model_path = None, mqtt_url = None, mqtt_port = None):
         self.log_info = log_info if log_info else False
         self.server_url = server_url
         self.iteration_time = iteration_time if iteration_time is not None else 0.1
@@ -35,9 +35,12 @@ class ExecutionEngine:
         self.priority = priority
         self.prioritizer = prioritizer
         self.prioritizing_object = None
+        self.information_model_path = information_model_path
+        self.mqtt_url = mqtt_url
+        self.mqtt_port = mqtt_port
 
     async def start_server(self, struct_object, data_object):
-        self.server = ExecutionEngineServer(self.server_url, self.iteration_time, self.log_info)
+        self.server = ExecutionEngineServer(self.server_url, self.iteration_time, self.log_info, self.information_model_path)
         self.server_instance = await self.server.start_server(struct_object, data_object)
         print("[", datetime.now(), "] Start Execution Engine ", self.server_instance)
 
@@ -50,7 +53,7 @@ class ExecutionEngine:
             self.prioritizing_object.start()
             self.prioritizing_object.registered = True
         async with self.server_instance:
-            EventListener(self.server.server_url, self.dispatcher).run()
+            EventListener(self.server.server_url, self.dispatcher, self.mqtt_url, self.mqtt_port).run()
             self.dispatcher.set_callbacks(self.server_instance, self.server)
             ClientControlInterface = ControlInterface(self.server, self.server_instance,
                                                       self.dispatcher.dispatcher_callbacks.service_execution_list,
