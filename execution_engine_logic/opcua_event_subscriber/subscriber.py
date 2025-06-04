@@ -13,7 +13,7 @@ class MQTTClient:
         self.connect()
 
     def connect(self):
-        self.client.connect(self.broker, self.port)
+        self.client.connect(self.broker, int(self.port))
         print(f"Connected to MQTT Broker at {self.broker}:{self.port}")
 
     def publish(self, message):
