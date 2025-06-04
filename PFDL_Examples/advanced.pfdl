@@ -42,7 +42,7 @@ Task productionTask
                         "segment_id": "Default"
                     }
                     ],
-                    "number_light_segments": 30
+                    "number_light_segments": 5
                 }
         manufacture_stand_segment
             In
@@ -67,7 +67,7 @@ Task productionTask
                             "segment_id": "Default"
                         }
                         ],
-                        "number_light_segments": 30
+                        "number_light_segments": 5
                     }
             Out
                 order:SWAP_Order
