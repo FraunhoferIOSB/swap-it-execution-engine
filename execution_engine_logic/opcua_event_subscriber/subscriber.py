@@ -12,9 +12,9 @@ class MQTTClient:
         self.topic = topic
         self.connect()
 
+
     def connect(self):
         self.client.connect(self.broker, int(self.port))
-        print(f"Connected to MQTT Broker at {self.broker}:{self.port}")
 
     def publish(self, message):
         self.client.publish(self.topic, json.dumps(message))
@@ -74,7 +74,8 @@ class SubHandlerFinished:
 
 class EventListener:
 
-    def __init__(self, ee_url, dispatcher, mqtt_url, mqtt_port):
+    def __init__(self, ee, ee_url, dispatcher, mqtt_url, mqtt_port):
+        self.execution_engine = ee
         self.client = None
         self.server_object = None
         self.ee_url = ee_url
@@ -110,7 +111,7 @@ class EventListener:
             await self.subscribe_service_finished()
             await self.subscribe_task_started()
             await self.subscribe_task_finished()
-            while self.dispatcher.run_dispatcher():
+            while self.execution_engine.running:
                 await asyncio.sleep(1)
 
     def start_client(self):

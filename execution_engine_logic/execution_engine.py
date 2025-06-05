@@ -38,6 +38,7 @@ class ExecutionEngine:
         self.information_model_path = information_model_path
         self.mqtt_url = mqtt_url
         self.mqtt_port = mqtt_port
+        self.running = True
 
     async def start_server(self, struct_object, data_object):
         self.server = ExecutionEngineServer(self.server_url, self.iteration_time, self.log_info, self.information_model_path)
@@ -53,7 +54,7 @@ class ExecutionEngine:
             self.prioritizing_object.start()
             self.prioritizing_object.registered = True
         async with self.server_instance:
-            EventListener(self.server.server_url, self.dispatcher, self.mqtt_url, self.mqtt_port).run()
+            EventListener(self, self.server.server_url, self.dispatcher, self.mqtt_url, self.mqtt_port).run()
             self.dispatcher.set_callbacks(self.server_instance, self.server)
             ClientControlInterface = ControlInterface(self.server, self.server_instance,
                                                       self.dispatcher.dispatcher_callbacks.service_execution_list,
@@ -66,7 +67,7 @@ class ExecutionEngine:
             self.dispatcher.dispatcher_callbacks.add_control_interface(ClientControlInterface)
             await asyncio.sleep(5)
             self.dispatcher.start_dispatcher()
-            while self.dispatcher.run_dispatcher():
+            while self.running:
                 service_uuid, task_uuid, name = self.dispatcher.dispatcher_callbacks.service_execution_list.remove_service()
                 if service_uuid != None:
                     await self.server.data_object.write_state_variable(task_uuid, ua.Variant(self.server.service_execution_states[0]))
@@ -74,6 +75,8 @@ class ExecutionEngine:
                         print("[", datetime.now(), "] ---------> Set Token for Service ", name, " with uuid ", service_uuid)
                     self.dispatcher.fire_event(service_uuid)
                 await asyncio.sleep(self.iteration_time)
+                self.running = self.dispatcher.run_dispatcher()
+
             print("[", datetime.now(), "] Shut down the ControlInterface")
             for i in range(len(ClientControlInterface.client_dict["Client"])):
                 ClientControlInterface.client_dict["Client"][i].stop_control_interface_loop()

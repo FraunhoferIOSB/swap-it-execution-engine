@@ -40,7 +40,6 @@ class ExecutionEngineServer:
         self.data_object = data_object
         self.data_object.set_idx(self.idx)
         self.data_object.set_server(self.server)
-        print(os.getcwd())
         await self.server.import_xml(self.information_model_path)
         namespaces = await self.server.get_namespace_array()
         for i in range(len(namespaces)):
